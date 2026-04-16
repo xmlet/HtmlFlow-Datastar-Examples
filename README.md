@@ -1,1 +1,135 @@
 # HtmlFlow-Datastar-Examples
+
+This repository contains two projects. The first replaces the Thymeleaf template engine with the [Type-Safe Hypermedia-First DSL for Reactive 
+Backend-Driven Web Applications](https://github.com/xmlet/HtmlFlow-Datastar) in order to implement an equivalent version of the classic [Spring 
+Petclinic](https://github.com/spring-petclinic/spring-petclinic-kotlin). The second project gathers the [Datastar examples](https://data-star.dev/examples), providing a practical showcase of how the
+DSL can be used in real backend-driven web applications.
+
+## Datastar Examples
+
+This project includes a demo web application featuring examples from
+[Data-Star](https://data-star.dev/examples), running on **Ktor** and **http4k** and using the **HtmlFlow Kotlin DSL** to generate HTML.
+
+HtmlFlow DSL provides type-safe backend handlers for DataStar actions.
+In the following samples, note how the action `get` is attached to a handler given by a function reference, this function being annotated
+with `Path`, from Jakarta, where the resource location for the
+request is specified.
+
+
+HtmlFlow DSL also provides a type-safe way to define Datastar
+attributes in Kotlin. Next is a sample of the Counter example
+with a strongly typed signal and another one from Active Search using events and modifiers:
+
+
+<table class="table">
+<tr>
+<td>
+
+
+```kotlin
+div {
+  val count: Signal = dataSignal("count", 0)
+  div {
+    dataInit { get(::getCounterEvents) }
+    span {
+      attrId("counter")
+      dataText{ +count }
+    }
+  }
+}
+```
+
+</td>
+<td>
+
+
+```kotlin
+div {
+  attrId("demo")
+  input {
+    attrType(EnumTypeInputType.TEXT)
+    attrPlaceholder("Search...")
+    dataBind("search")
+    dataOn(Input) {
+      get(::search)
+      modifiers { debounce(200.milliseconds) }
+    }
+  }
+}
+```
+
+</td>
+</tr>
+<tr>
+    <td>
+        Note that the <code>count</code> variable is of type <code>Signal</code>
+        and simply binds to the data-text in a type-safe way,
+        regardless of the name passed to the <code>Signal</code> constructor.
+    </td>
+    <td>
+        Modifiers such as <code>debounce</code> are added inside a lambda using 
+        builders, following an idiomatic Kotlin style.
+    </td>
+</tr>
+</table>
+
+Also, HtmlFlow DSL supports strongly typed DataStar expressions,
+allowing their composition with the infix operator `and`,
+such as in the expression `!fetching and get(::clickToLoadMore)`.
+Note how the JavaScript expression for the `onclick` event handler (right side)
+is expressed in Kotlin through HtmlFlow in a type-safe way:
+
+
+<table>
+<tr>
+<td>
+
+```kotlin
+button {
+  val fetching = dataIndicator("_fetching")
+  dataAttr("disabled") { +fetching }
+  dataOn(Click) {
+      !fetching and get(::clickToLoadMore)
+  }
+  text("Load More")
+}
+```
+
+</td>
+<td>
+
+```html
+<button
+  data-indicator:_fetching
+  data-attr:aria-disabled="$_fetching"
+  data-on:click="!$_fetching && @get('/examples/click_to_load/more')"
+>
+    Load More
+</button>
+```
+
+</td>
+</tr>
+</table>
+
+Change to the `datastar-examples` directory and run the application with Gradle. The application will start two servers, one for Ktor and another for http4k, each running the same examples.
+```bash
+cd ./datastar-examples
+```
+Run with:
+```bash
+./gradlew run
+```
+
+Then open `http://localhost:8080` for the ktor server and `http://localhost:8070` for http4k in your browser.
+
+Check all examples from the index page and corresponding HtmlFlow view definitions:
+* Active Search - [ActiveSearch.kt](datastar-examples/src/main/kotlin/pt/isel/views/htmlflow/ActiveSearch.kt)
+* Bulk Update - [BulkUpdate.kt](datastar-examples/src/main/kotlin/pt/isel/views/htmlflow/BulkUpdate.kt)
+* Click To Edit - [ClickToEdit.kt](datastar-examples/src/main/kotlin/pt/isel/views/htmlflow/ClickToEdit.kt)
+* Click To Load - [BulkUpdate.kt](datastar-examples/src/main/kotlin/pt/isel/views/htmlflow/BulkUpdate.kt)
+* Counter Via Signals - [CounterViaSignals.kt](datastar-examples/src/main/kotlin/pt/isel/views/htmlflow/CounterViaSignals.kt)
+* Delete Row - [DeleteRow.kt](datastar-examples/src/main/kotlin/pt/isel/views/htmlflow/DeleteRow.kt)
+* File Upload - [FileUpload.kt](datastar-examples/src/main/kotlin/pt/isel/views/htmlflow/FileUpload.kt)
+* Infinite Scroll - [InfiniteScroll.kt](datastar-examples/src/main/kotlin/pt/isel/views/htmlflow/InfiniteScroll.kt)
+* Inline Validation - [InlineValidation.kt](datastar-examples/src/main/kotlin/pt/isel/views/htmlflow/InlineValidation.kt)
