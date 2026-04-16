@@ -1,0 +1,35 @@
+name: Petclinic CI
+
+on:
+  push:
+    branches:
+      - main
+      - development
+    paths:
+      - 'spring-petclinic-kotlin/**'
+      - '.github/workflows/petclinic.yml'
+  pull_request:
+    branches:
+      - main
+      - development
+    paths:
+      - 'spring-petclinic-kotlin/**'
+      - '.github/workflows/petclinic.yml'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: spring-petclinic-kotlin
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: gradle
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew build
