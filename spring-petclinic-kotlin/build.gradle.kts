@@ -18,7 +18,7 @@ val webjarsLocatorLiteVersion = "1.1.2"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -61,9 +61,12 @@ dependencies {
 
     runtimeOnly("com.h2database:h2")
     runtimeOnly("com.mysql:mysql-connector-j")
-    runtimeOnly("org.webjars:webjars-locator-lite:${webjarsLocatorLiteVersion}")
+    runtimeOnly("org.webjars:webjars-locator-lite:$webjarsLocatorLiteVersion")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+    // HtmlFlow Datastar dependency
+    implementation("com.github.xmlet:htmlflow-datastar-core:1.1.0-alpha.1")
 }
 
 jib {
@@ -72,4 +75,3 @@ jib {
         tags = setOf(project.version.toString(), "latest")
     }
 }
-
