@@ -1,10 +1,10 @@
 package pt.isel.ktor
 
-import dev.datastar.kotlin.sdk.ServerSentEventGenerator
+import dev.datastar.kotlin.sdk.coroutines.ServerSentEventGenerator
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode.Companion.OK
+import io.ktor.server.response.respondBytesWriter
 import io.ktor.server.response.respondText
-import io.ktor.server.response.respondTextWriter
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.get
@@ -16,6 +16,7 @@ import pt.isel.views.fragments.hfProgressBarDescription
 import pt.isel.views.htmlflow.hfProgressBar
 import pt.isel.views.htmlflow.renderProgressBarFragment
 import kotlin.random.Random
+import kotlin.time.Duration.Companion.milliseconds
 
 private val html = loadResource("public/html/progress-bar.html")
 
@@ -37,7 +38,7 @@ private suspend fun RoutingContext.getProgressBarHtmlFlow() {
 }
 
 private suspend fun RoutingContext.progressBarUpdates() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {
@@ -49,7 +50,7 @@ private suspend fun RoutingContext.progressBarUpdates() {
             val fragment = renderProgressBarFragment.render(state)
             generator.patchElements(fragment)
 
-            delay(200)
+            delay(200.milliseconds)
             progress += Random.nextInt(1, 16)
         }
 
@@ -60,7 +61,7 @@ private suspend fun RoutingContext.progressBarUpdates() {
 }
 
 private suspend fun RoutingContext.getProgressBarDescription() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {

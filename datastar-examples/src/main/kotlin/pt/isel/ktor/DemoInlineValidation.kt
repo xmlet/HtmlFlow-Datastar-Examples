@@ -2,12 +2,12 @@ package pt.isel.ktor
 
 import dev.datastar.kotlin.sdk.ElementPatchMode
 import dev.datastar.kotlin.sdk.PatchElementsOptions
-import dev.datastar.kotlin.sdk.ServerSentEventGenerator
+import dev.datastar.kotlin.sdk.coroutines.ServerSentEventGenerator
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.server.request.receiveText
+import io.ktor.server.response.respondBytesWriter
 import io.ktor.server.response.respondText
-import io.ktor.server.response.respondTextWriter
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.get
@@ -45,7 +45,7 @@ private suspend fun RoutingContext.getInlineValidationHtmlFlow() {
 }
 
 private suspend fun RoutingContext.validateFields() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {
@@ -87,7 +87,7 @@ private fun shouldClearFieldError(
     isFieldValid: Boolean,
 ): Boolean = fieldValue.isBlank() || isFieldValid
 
-private fun clearSelectiveErrors(
+private suspend fun clearSelectiveErrors(
     generator: ServerSentEventGenerator,
     signals: InlineValidationSignals,
     validationResult: ValidationResult,
@@ -114,7 +114,7 @@ private fun clearSelectiveErrors(
 private fun allFieldsAreBlank(signals: InlineValidationSignals): Boolean =
     signals.email.isBlank() && signals.firstName.isBlank() && signals.lastName.isBlank()
 
-private fun patchValidationErrors(
+private suspend fun patchValidationErrors(
     generator: ServerSentEventGenerator,
     result: ValidationResult,
     signals: InlineValidationSignals,
@@ -149,7 +149,7 @@ private fun patchValidationErrors(
 }
 
 private suspend fun RoutingContext.signUp() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {
@@ -160,7 +160,7 @@ private suspend fun RoutingContext.signUp() {
 }
 
 private suspend fun RoutingContext.getInlineValidationDescription() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {

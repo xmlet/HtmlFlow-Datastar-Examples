@@ -32,8 +32,8 @@ dependencies {
     // HtmlFlow-Datastar dependency
     implementation("com.github.xmlet:htmlflow-datastar-core:1.1.0-alpha.1")
 
-    // Datastar Kotlin dependencies
-    implementation("dev.data-star.kotlin:kotlin-sdk:1.0.0-RC3")
+    // Datastar Kotlin SDK non-blocking dependencies
+    implementation("dev.data-star.kotlin:kotlin-sdk-coroutines:1.0.0-RC5")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 
     implementation("org.slf4j:slf4j-simple:2.0.16")

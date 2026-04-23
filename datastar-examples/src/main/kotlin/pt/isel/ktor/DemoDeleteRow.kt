@@ -2,13 +2,13 @@ package pt.isel.ktor
 
 import dev.datastar.kotlin.sdk.ElementPatchMode
 import dev.datastar.kotlin.sdk.PatchElementsOptions
-import dev.datastar.kotlin.sdk.ServerSentEventGenerator
+import dev.datastar.kotlin.sdk.coroutines.ServerSentEventGenerator
 import htmlflow.div
 import htmlflow.view
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode.Companion.OK
+import io.ktor.server.response.respondBytesWriter
 import io.ktor.server.response.respondText
-import io.ktor.server.response.respondTextWriter
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.delete
@@ -61,7 +61,7 @@ private suspend fun RoutingContext.getDeleteRowHtmlFlow() {
 }
 
 private suspend fun RoutingContext.deleteRow() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {
@@ -76,7 +76,7 @@ private suspend fun RoutingContext.deleteRow() {
 }
 
 private suspend fun RoutingContext.resetUsers() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {
@@ -87,7 +87,7 @@ private suspend fun RoutingContext.resetUsers() {
 }
 
 private suspend fun RoutingContext.getDeleteRowDescription() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {

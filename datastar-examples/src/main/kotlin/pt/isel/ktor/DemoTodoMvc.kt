@@ -1,6 +1,6 @@
 package pt.isel.ktor
 
-import dev.datastar.kotlin.sdk.ServerSentEventGenerator
+import dev.datastar.kotlin.sdk.coroutines.ServerSentEventGenerator
 import htmlflow.div
 import htmlflow.view
 import io.ktor.http.ContentType
@@ -9,8 +9,8 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.server.request.receiveText
 import io.ktor.server.response.respond
+import io.ktor.server.response.respondBytesWriter
 import io.ktor.server.response.respondText
-import io.ktor.server.response.respondTextWriter
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.delete
@@ -96,7 +96,7 @@ data class TodoUiState(
 
 private suspend fun RoutingContext.getUpdates() {
     val account = accountFlow()
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {
@@ -262,7 +262,7 @@ private suspend fun RoutingContext.resetTasks() {
 }
 
 private suspend fun RoutingContext.getTodoMvcDescription() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {

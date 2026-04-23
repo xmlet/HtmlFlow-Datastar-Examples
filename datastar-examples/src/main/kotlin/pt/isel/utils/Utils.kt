@@ -1,7 +1,8 @@
 package pt.isel.utils
 
-import dev.datastar.kotlin.sdk.Response
-import java.io.Writer
+import dev.datastar.kotlin.sdk.coroutines.Response
+import io.ktor.utils.io.ByteWriteChannel
+import io.ktor.utils.io.writeStringUtf8
 import java.nio.file.Path
 import java.nio.file.Paths
 
@@ -37,20 +38,20 @@ fun getResourcePath(path: String): Path =
  *
  * @return A `Response` implementation for sending headers and writing data to the response.
  */
-fun response(writer: Writer): Response =
+fun response(channel: ByteWriteChannel): Response =
     object : Response {
-        override fun sendConnectionHeaders(
+        override suspend fun sendConnectionHeaders(
             status: Int,
             headers: Map<String, List<String>>,
         ) {
-            // connection is already set up when used
+            // Ktor already set status and Content-Type on respondBytesWriter.
         }
 
-        override fun write(text: String) {
-            writer.write(text)
+        override suspend fun write(text: String) {
+            channel.writeStringUtf8(text)
         }
 
-        override fun flush() {
-            writer.flush()
+        override suspend fun flush() {
+            channel.flush()
         }
     }

@@ -1,10 +1,10 @@
 package pt.isel.ktor
 
-import dev.datastar.kotlin.sdk.ServerSentEventGenerator
+import dev.datastar.kotlin.sdk.coroutines.ServerSentEventGenerator
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode.Companion.OK
+import io.ktor.server.response.respondBytesWriter
 import io.ktor.server.response.respondText
-import io.ktor.server.response.respondTextWriter
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.get
@@ -38,7 +38,7 @@ suspend fun RoutingContext.getComplexDomainHtmlFlow() {
 
 @Path("/complex-domain/switch-user")
 suspend fun RoutingContext.switchUser() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {
@@ -56,7 +56,7 @@ suspend fun RoutingContext.switchUser() {
 
 @Path("/complex-domain/increase-age")
 suspend fun RoutingContext.updateUserAge() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {

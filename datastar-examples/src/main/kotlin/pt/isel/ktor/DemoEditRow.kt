@@ -2,14 +2,14 @@ package pt.isel.ktor
 
 import dev.datastar.kotlin.sdk.ElementPatchMode
 import dev.datastar.kotlin.sdk.PatchElementsOptions
-import dev.datastar.kotlin.sdk.ServerSentEventGenerator
+import dev.datastar.kotlin.sdk.coroutines.ServerSentEventGenerator
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.server.request.receiveText
 import io.ktor.server.response.respond
+import io.ktor.server.response.respondBytesWriter
 import io.ktor.server.response.respondText
-import io.ktor.server.response.respondTextWriter
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.get
@@ -50,7 +50,7 @@ private suspend fun RoutingContext.getEditRowHtmlFlow() {
 }
 
 private suspend fun RoutingContext.editRow() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {
@@ -58,7 +58,7 @@ private suspend fun RoutingContext.editRow() {
         val index = call.pathParameters["index"]?.toIntOrNull()
         requireNotNull(index)
 
-        if (index > users.size - 1) return@respondTextWriter call.respond(HttpStatusCode.BadRequest)
+        if (index > users.size - 1) return@respondBytesWriter call.respond(HttpStatusCode.BadRequest)
         val user = users.first { it.idx == index }
         generator.patchSignals(
             """ { "idx":${user.idx}, "name": "${user.name}", "email": "${user.email}" } """,
@@ -71,7 +71,7 @@ private suspend fun RoutingContext.editRow() {
 }
 
 private suspend fun RoutingContext.cancelEditRow() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {
@@ -88,7 +88,7 @@ private suspend fun RoutingContext.cancelEditRow() {
 }
 
 private suspend fun RoutingContext.resetUsers() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {
@@ -105,7 +105,7 @@ private suspend fun RoutingContext.resetUsers() {
 }
 
 private suspend fun RoutingContext.saveEditRow() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {
@@ -126,7 +126,7 @@ private suspend fun RoutingContext.saveEditRow() {
 }
 
 private suspend fun RoutingContext.getEditRowDescription() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {
