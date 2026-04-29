@@ -17,8 +17,8 @@ import org.xmlet.htmlapifaster.nav
 import org.xmlet.htmlapifaster.script
 import org.xmlet.htmlapifaster.title
 
-fun layout(content: Div<*>.() -> Unit): HtmlView<Unit> =
-    view<Unit> {
+fun layout(content: Div<*>.() -> Unit): HtmlView<Any> =
+    view<Any> {
         html {
             head {
                 meta {

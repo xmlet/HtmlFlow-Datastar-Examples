@@ -15,7 +15,11 @@
  */
 package org.springframework.samples.petclinic.owner
 
-
+import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
+import org.springframework.samples.petclinic.views.CreateOrUpdatePetForm
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
@@ -23,26 +27,31 @@ import org.springframework.util.StringUtils
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.*
-import jakarta.validation.Valid
+import java.net.URI
 
 /**
  * @author Juergen Hoeller
  * @author Ken Krebs
  * @author Arjen Poutsma
  * @author Antoine Rey
+ *
+ * @author Paulo Carvalho
  */
 @Controller
 @RequestMapping("/owners/{ownerId}")
-class PetController(val pets: PetRepository, val owners: OwnerRepository) {
-
-    private val VIEWS_PETS_CREATE_OR_UPDATE_FORM = "pets/createOrUpdatePetForm"
+class PetController(
+    val pets: PetRepository,
+    val owners: OwnerRepository,
+) {
+    private val petForm = CreateOrUpdatePetForm(pets)
 
     @ModelAttribute("types")
     fun populatePetTypes(): Collection<PetType> = this.pets.findPetTypes()
 
     @ModelAttribute("owner")
-    fun findOwner(@PathVariable("ownerId") ownerId: Int): Owner
-            = owners.findById(ownerId)
+    fun findOwner(
+        @PathVariable("ownerId") ownerId: Int,
+    ): Owner = owners.findById(ownerId)
 
     @InitBinder("owner")
     fun initOwnerBinder(dataBinder: WebDataBinder) {
@@ -55,46 +64,68 @@ class PetController(val pets: PetRepository, val owners: OwnerRepository) {
     }
 
     @GetMapping("/pets/new")
-    fun initCreationForm(owner: Owner, model: Model): String {
+    fun initCreationForm(
+        owner: Owner,
+        model: Model,
+    ): ResponseEntity<String> {
         val pet = Pet()
         owner.addPet(pet)
         model["pet"] = pet
-        return VIEWS_PETS_CREATE_OR_UPDATE_FORM
+        return ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(
+            petForm.view.render(pet),
+        )
     }
 
     @PostMapping("/pets/new")
-    fun processCreationForm(owner: Owner, @Valid pet: Pet, result: BindingResult, model: Model): String {
+    fun processCreationForm(
+        owner: Owner,
+        @Valid pet: Pet,
+        result: BindingResult,
+        model: Model,
+    ): ResponseEntity<String> {
         if (StringUtils.hasLength(pet.name) && pet.isNew && owner.getPet(pet.name!!, true) != null) {
             result.rejectValue("name", "duplicate", "already exists")
         }
         owner.addPet(pet)
         return if (result.hasErrors()) {
             model["pet"] = pet
-            VIEWS_PETS_CREATE_OR_UPDATE_FORM
+            ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(
+                petForm.view.render(pet),
+            )
         } else {
             this.pets.save(pet)
-            "redirect:/owners/{ownerId}"
+            ResponseEntity.status(HttpStatus.SEE_OTHER).location(URI.create("/owners/" + owner.id)).build()
         }
     }
 
     @GetMapping("/pets/{petId}/edit")
-    fun initUpdateForm(@PathVariable petId: Int, model: Model): String {
+    fun initUpdateForm(
+        @PathVariable petId: Int,
+        model: Model,
+    ): ResponseEntity<String> {
         val pet = pets.findById(petId)
         model["pet"] = pet
-        return VIEWS_PETS_CREATE_OR_UPDATE_FORM
+        return ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(
+            petForm.view.render(pet),
+        )
     }
 
     @PostMapping("/pets/{petId}/edit")
-    fun processUpdateForm(@Valid pet: Pet, result: BindingResult, owner: Owner, model: Model): String {
-        return if (result.hasErrors()) {
+    fun processUpdateForm(
+        @Valid pet: Pet,
+        result: BindingResult,
+        owner: Owner,
+        model: Model,
+    ): ResponseEntity<String> =
+        if (result.hasErrors()) {
             pet.owner = owner
             model["pet"] = pet
-            VIEWS_PETS_CREATE_OR_UPDATE_FORM
+            ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(
+                petForm.view.render(pet),
+            )
         } else {
             owner.addPet(pet)
             pets.save(pet)
-            "redirect:/owners/{ownerId}"
+            ResponseEntity.status(HttpStatus.SEE_OTHER).location(URI.create("/owners/" + owner.id)).build()
         }
-    }
-
 }

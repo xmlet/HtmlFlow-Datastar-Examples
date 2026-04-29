@@ -67,6 +67,9 @@ dependencies {
 
     // HtmlFlow Datastar dependency
     implementation("com.github.xmlet:htmlflow-datastar-core:1.1.0-alpha.1")
+
+    // Datastar SDK dependency
+    implementation("dev.data-star.kotlin:kotlin-sdk:1.0.0-RC5")
 }
 
 jib {
