@@ -9,12 +9,15 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.BDDMockito.given
+import org.springframework.samples.petclinic.pet.PetRepository
+import org.springframework.samples.petclinic.pet.PetType
+import org.springframework.samples.petclinic.pet.PetTypeFormatter
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.text.ParseException
 import java.util.*
 
 /**
- * Test class for [PetTypeFormatter]
+ * Test class for [org.springframework.samples.petclinic.pet.PetTypeFormatter]
  *
  * @author Colin But
  */

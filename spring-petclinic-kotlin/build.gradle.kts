@@ -10,6 +10,7 @@ plugins {
     id("com.google.cloud.tools.jib") version "3.5.3"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
+    kotlin("plugin.serialization") version kotlinVersion
 }
 
 val boostrapVersion = "5.3.8"
@@ -67,6 +68,9 @@ dependencies {
 
     // HtmlFlow Datastar dependency
     implementation("com.github.xmlet:htmlflow-datastar-core:1.1.0-alpha.1")
+
+    // kotlinx.serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")
 
     // Datastar SDK dependency
     implementation("dev.data-star.kotlin:kotlin-sdk:1.0.0-RC5")

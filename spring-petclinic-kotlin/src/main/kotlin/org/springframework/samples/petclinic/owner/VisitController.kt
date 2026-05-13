@@ -15,13 +15,24 @@
  */
 package org.springframework.samples.petclinic.owner
 
+import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
+import org.springframework.samples.petclinic.Routes
+import org.springframework.samples.petclinic.pet.PetRepository
+import org.springframework.samples.petclinic.views.visits.CreateOrUpdateVisitForm
 import org.springframework.samples.petclinic.visit.Visit
 import org.springframework.samples.petclinic.visit.VisitRepository
 import org.springframework.stereotype.Controller
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.WebDataBinder
-import org.springframework.web.bind.annotation.*
-import jakarta.validation.Valid
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.InitBinder
+import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import java.net.URI
 
 /**
  * @author Juergen Hoeller
@@ -32,7 +43,12 @@ import jakarta.validation.Valid
  * @author Antoine Rey
  */
 @Controller
-class VisitController(val visits: VisitRepository, val pets: PetRepository) {
+class VisitController(
+    val visits: VisitRepository,
+    val pets: PetRepository,
+    val owners: OwnerRepository,
+) {
+    private val createOrUpdateVisitForm = CreateOrUpdateVisitForm()
 
     @InitBinder
     fun setAllowedFields(dataBinder: WebDataBinder) {
@@ -50,28 +66,51 @@ class VisitController(val visits: VisitRepository, val pets: PetRepository) {
      * @return Pet
      */
     @ModelAttribute("visit")
-    fun loadPetWithVisit(@PathVariable("petId") petId: Int, model: MutableMap<String, Any>): Visit {
+    fun loadPetWithVisit(
+        @PathVariable("petId") petId: Int,
+        model: MutableMap<String, Any>,
+    ): Visit {
         val pet = pets.findById(petId)
         model["pet"] = pet
         val visit = Visit()
+        visit.petId = pet.id
         pet.addVisit(visit)
         return visit
     }
 
     // Spring MVC calls method loadPetWithVisit(...) before initNewVisitForm is called
-    @GetMapping("/owners/*/pets/{petId}/visits/new")
-    fun initNewVisitForm(@PathVariable("petId") petId: Int, model: Map<String, Any>): String
-            = "pets/createOrUpdateVisitForm"
-
-    // Spring MVC calls method loadPetWithVisit(...) before processNewVisitForm is called
-    @PostMapping("/owners/{ownerId}/pets/{petId}/visits/new")
-    fun processNewVisitForm(@Valid visit: Visit, result: BindingResult): String {
-        return if (result.hasErrors()) {
-            "pets/createOrUpdateVisitForm"
-        } else {
-            visits.save(visit)
-            "redirect:/owners/{ownerId}"
-        }
+    @GetMapping(Routes.VISIT_NEW)
+    fun initNewVisitForm(
+        @PathVariable("petId") petId: Int,
+    ): ResponseEntity<String> {
+        val pet = pets.findById(petId)
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.TEXT_HTML)
+            .body(createOrUpdateVisitForm.view.render(pet))
     }
 
+    // Spring MVC calls method loadPetWithVisit(...) before processNewVisitForm is called
+    @PostMapping(Routes.VISIT_NEW)
+    fun processNewVisitForm(
+        @PathVariable("ownerId") ownerId: Int,
+        @PathVariable("petId") petId: Int,
+        @Valid visit: Visit,
+        result: BindingResult,
+    ): ResponseEntity<String> {
+        val pet = pets.findById(petId)
+        return if (result.hasErrors()) {
+            result.reject("createError", "Please fix the validation errors and try again")
+            ResponseEntity
+                .ok()
+                .contentType(MediaType.TEXT_HTML)
+                .body(createOrUpdateVisitForm.view.render(pet))
+        } else {
+            visits.save(visit)
+            ResponseEntity
+                .status(HttpStatus.SEE_OTHER)
+                .location(URI.create(Routes.ownerId(ownerId)))
+                .build()
+        }
+    }
 }

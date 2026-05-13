@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.samples.petclinic.owner
-
+package org.springframework.samples.petclinic.pet
 
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.Repository
@@ -31,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional
  * @author Antoine Rey
  */
 interface PetRepository : Repository<Pet, Int> {
-
     /**
      * Retrieve all {@link PetType}s from the data store.
      * @return a Collection of {@link PetType}s.
@@ -53,5 +51,4 @@ interface PetRepository : Repository<Pet, Int> {
      * @param pet the {@link Pet} to save
      */
     fun save(pet: Pet)
-
 }

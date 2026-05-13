@@ -11,6 +11,11 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.http.MediaType
+import org.springframework.samples.petclinic.pet.Pet
+import org.springframework.samples.petclinic.pet.PetController
+import org.springframework.samples.petclinic.pet.PetRepository
+import org.springframework.samples.petclinic.pet.PetType
+import org.springframework.samples.petclinic.pet.PetTypeFormatter
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
@@ -19,7 +24,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 /**
- * Test class for the [PetController]
+ * Test class for the [org.springframework.samples.petclinic.pet.PetController]
  *
  * @author Colin But
  */

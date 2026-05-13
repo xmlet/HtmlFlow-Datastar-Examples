@@ -6,6 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
+import org.springframework.samples.petclinic.pet.Pet
+import org.springframework.samples.petclinic.pet.PetRepository
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.samples.petclinic.visit.VisitRepository
 import org.springframework.test.context.junit.jupiter.SpringExtension

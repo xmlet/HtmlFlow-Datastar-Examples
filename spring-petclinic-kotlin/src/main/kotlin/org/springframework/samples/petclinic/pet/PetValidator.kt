@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.samples.petclinic.owner
+package org.springframework.samples.petclinic.pet
 
 import org.springframework.util.StringUtils
 import org.springframework.validation.Errors
 import org.springframework.validation.Validator
-
 
 /**
  * `Validator` for `Pet` forms.
@@ -32,7 +31,10 @@ import org.springframework.validation.Validator
  * @author Antoine Rey
  */
 class PetValidator : Validator {
-    override fun validate(obj: Any, errors: Errors) {
+    override fun validate(
+        obj: Any,
+        errors: Errors,
+    ) {
         val pet = obj as Pet
         val name = pet.name
         // name validation
@@ -54,11 +56,9 @@ class PetValidator : Validator {
     /**
      * This Validator validates *just* Pet instances
      */
-    override fun supports(clazz: Class<*>)
-            = Pet::class.java.isAssignableFrom(clazz)
+    override fun supports(clazz: Class<*>) = Pet::class.java.isAssignableFrom(clazz)
 
     companion object {
         const val REQUIRED = "required"
     }
-
 }
