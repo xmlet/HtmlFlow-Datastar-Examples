@@ -107,22 +107,22 @@ class OwnerController(
         }
 
     @GetMapping(Routes.OWNERS)
-    fun processFindForm(
-        owner: Owner,
-        result: BindingResult,
-    ): ResponseEntity<String> {
+    fun processFindForm(owner: Owner): ResponseEntity<String> {
         // find owners by last name
         val results = owners.findByLastName(owner.lastName)
         return when {
             results.isEmpty() -> {
                 // no owners found
-                result.rejectValue("lastName", "notFound", "not found")
                 ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(ownersFind.view.render(emptyList<Owner>()))
             }
 
             results.size == 1 -> {
                 // 1 owner found
-                ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(ownersDetails.view.render(results.first()))
+                val foundOwner = results.first()
+                ResponseEntity
+                    .status(HttpStatus.SEE_OTHER)
+                    .location(URI.create(Routes.ownerId(foundOwner.id)))
+                    .build()
             }
 
             else -> {
@@ -221,6 +221,7 @@ class OwnerController(
             } else {
                 owners.save(owner)
                 generator.patchElements(ownersDetails.defaultOwnerTableView.render(owner))
+                generator.patchSignals(resetOwnerSignals())
             }
             stream.flush()
         }
@@ -234,6 +235,18 @@ class OwnerController(
             val generator = ServerSentEventGenerator(response)
             val owner = owners.findById(ownerId)
             generator.patchElements(ownersDetails.defaultOwnerTableView.render(owner))
+            generator.patchSignals(resetOwnerSignals())
             stream.flush()
         }
+
+    private fun resetOwnerSignals() =
+        """
+        {
+         "firstName": null,
+         "lastName": null,
+         "address": null,
+         "city": null,
+         "telephone": null
+        }
+        """.trimIndent()
 }

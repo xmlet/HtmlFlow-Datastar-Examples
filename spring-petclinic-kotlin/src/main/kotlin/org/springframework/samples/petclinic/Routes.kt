@@ -25,7 +25,12 @@ object Routes {
 
     fun petNewCancel(ownerId: Any?) = PET_NEW_CANCEL.replace("{ownerId}", ownerId.toString())
 
-    fun petEditCancel(ownerId: Any?) = PET_EDIT_CANCEL.replace("{ownerId}", ownerId.toString())
+    fun petEditCancel(
+        ownerId: Any?,
+        petId: Any?,
+    ) = PET_EDIT_CANCEL
+        .replace("{ownerId}", ownerId.toString())
+        .replace("{petId}", petId.toString())
 
     fun petEdit(
         ownerId: Any?,
