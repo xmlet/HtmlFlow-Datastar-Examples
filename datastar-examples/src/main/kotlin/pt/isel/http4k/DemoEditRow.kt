@@ -20,7 +20,6 @@ import org.http4k.sse.SseResponse
 import org.http4k.sse.sendPatchElements
 import org.http4k.sse.sendPatchSignals
 import pt.isel.ktor.DEFAULT_USERS
-import pt.isel.ktor.TableState
 import pt.isel.ktor.TableUser
 import pt.isel.utils.loadResource
 import pt.isel.views.fragments.hfEditRowDescription
@@ -30,7 +29,7 @@ import pt.isel.views.htmlflow.hfPartialEditRowView
 
 private val html = loadResource("public/html/edit-row.html")
 
-var tableState = TableState(DEFAULT_USERS.toMutableList())
+private val users = DEFAULT_USERS.toMutableList()
 
 fun demoEditRow(): PolyHandler =
     poly(
@@ -46,12 +45,12 @@ fun demoEditRow(): PolyHandler =
 fun getEditRowPageHtml(req: Request): Response = Response(OK).body(html).header("Content-Type", "text/html; charset=utf-8")
 
 fun getEditRowHtmlFlow(req: Request): Response =
-    Response(OK).body(hfEditRow.render(tableState)).header("Content-Type", "text/html; charset=utf-8")
+    Response(OK).body(hfEditRow.render(users)).header("Content-Type", "text/html; charset=utf-8")
 
 fun editRow(req: Request): SseResponse {
     val index = req.path("index")?.toIntOrNull()
     checkNotNull(index) { "Index can't be null" }
-    val user = tableState.users[index]
+    val user = users[index]
     return SseResponse { sse ->
         sse.sendPatchSignals(Signal.of("""{ "idx": ${user.idx}, "name": "${user.name}", "email": "${user.email}" }"""))
         sse.sendPatchElements(
@@ -59,21 +58,23 @@ fun editRow(req: Request): SseResponse {
             morphMode = MorphMode.replace,
             selector = Selector.of("#row-$index"),
         )
+        sse.close()
     }
 }
 
 @Path("/edit-row/reset")
 fun resetTable(req: Request): SseResponse =
     SseResponse { sse ->
-        (tableState.users as MutableList).clear()
-        (tableState.users as MutableList).addAll(DEFAULT_USERS)
-        tableState.users.forEach { user ->
+        users.clear()
+        users.addAll(DEFAULT_USERS)
+        users.forEach { user ->
             sse.sendPatchElements(
                 Element.of(defaultRowView.render(user)),
                 morphMode = MorphMode.replace,
                 selector = Selector.of("#row-${user.idx}"),
             )
         }
+        sse.close()
     }
 
 @Path("/edit-row/cancel")
@@ -82,12 +83,13 @@ fun cancelEditRow(req: Request): SseResponse =
         val queryStr = req.query("datastar")
         checkNotNull(queryStr) { "Datastar query parameter can't be null" }
         val (index, _, _) = Json.decodeFromString<TableUser>(queryStr)
-        val user = tableState.users.first { it.idx == index }
+        val user = users.first { it.idx == index }
         sse.sendPatchElements(
             Element.of(defaultRowView.render(user)),
             morphMode = MorphMode.replace,
             selector = Selector.of("#row-${user.idx}"),
         )
+        sse.close()
     }
 
 fun saveEditRow(req: Request): SseResponse {
@@ -95,16 +97,21 @@ fun saveEditRow(req: Request): SseResponse {
     checkNotNull(index) { "Index can't be null" }
     val body = req.bodyString()
     val editedUser = Json.decodeFromString<TableUser>(body)
-    val userIdx = tableState.users.indexOf(tableState.users.first { it.idx == index })
-    (tableState.users as MutableList)[userIdx] = editedUser
+    val userIdx = users.indexOf(users.first { it.idx == index })
+    users[userIdx] = editedUser
     return SseResponse { sse ->
         sse.sendPatchElements(
             Element.of(defaultRowView.render(editedUser)),
             morphMode = MorphMode.replace,
             selector = Selector.of("#row-$index"),
         )
+        sse.close()
     }
 }
 
 @Path("/edit-row/description")
-fun getEditRowDescription(req: Request): SseResponse = SseResponse { sse -> sse.sendPatchElements(Element.of(hfEditRowDescription)) }
+fun getEditRowDescription(req: Request): SseResponse =
+    SseResponse { sse ->
+        sse.sendPatchElements(Element.of(hfEditRowDescription))
+        sse.close()
+    }

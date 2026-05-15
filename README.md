@@ -7,6 +7,8 @@ DSL can be used in real backend-driven web applications.
 
 ## Datastar Examples
 
+🚀 **DataStar version: 1.0.1** 
+
 This project includes a demo web application featuring examples from
 [Data-Star](https://data-star.dev/examples), running on **Ktor** and **http4k** and using the **HtmlFlow Kotlin DSL** to generate HTML.
 

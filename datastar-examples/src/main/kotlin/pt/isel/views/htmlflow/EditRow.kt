@@ -35,13 +35,12 @@ import org.xmlet.htmlflow.datastar.events.Click
 import pt.isel.http4k.cancelEditRow
 import pt.isel.http4k.getEditRowDescription
 import pt.isel.http4k.resetTable
-import pt.isel.ktor.TableState
 import pt.isel.ktor.TableUser
 
 // Module-level signal accessible to all functions
 private lateinit var editing: Signal<Boolean>
 
-val hfEditRow: HtmlView<TableState> =
+val hfEditRow: HtmlView<List<TableUser>> =
     view {
         html {
             head {
@@ -78,8 +77,8 @@ fun Div<*>.hfEditRowTable() {
             }
         }
         tbody {
-            dyn { state: TableState ->
-                state.users.forEach { user ->
+            dyn { users: List<TableUser> ->
+                users.forEach { user ->
                     tr {
                         attrId("row-${user.idx}")
                         td { text(user.name) }

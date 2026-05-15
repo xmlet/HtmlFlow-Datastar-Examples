@@ -46,7 +46,7 @@ private suspend fun RoutingContext.getEditRowHtml() {
 }
 
 private suspend fun RoutingContext.getEditRowHtmlFlow() {
-    call.respondText(hfEditRow.render(TableState(users)), ContentType.Text.Html)
+    call.respondText(hfEditRow.render(users), ContentType.Text.Html)
 }
 
 private suspend fun RoutingContext.editRow() {
@@ -140,8 +140,4 @@ data class TableUser(
     val idx: Int,
     val name: String,
     val email: String,
-)
-
-data class TableState(
-    val users: List<TableUser>,
 )
