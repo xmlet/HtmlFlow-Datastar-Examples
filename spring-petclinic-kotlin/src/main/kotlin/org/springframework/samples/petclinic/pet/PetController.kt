@@ -108,15 +108,7 @@ class PetController(
             if (!errors.hasErrors()) {
                 owner.addPet(pet)
                 pets.save(pet)
-                generator.patchSignals(
-                    """
-                    {
-                        "nameNew": "",
-                        "birthDateNew": "",
-                        "typeNew": ""
-                    }
-                    """.trimIndent(),
-                )
+                generator.patchSignals(resetPetSignals("New"))
                 generator.patchElements(ownersDetails.defaultPetsTableView.render(owner))
             }
             stream.flush()
@@ -127,15 +119,7 @@ class PetController(
         StreamingResponseBody { stream ->
             val response = adapterResponse(stream)
             val generator = ServerSentEventGenerator(response)
-            generator.patchSignals(
-                """
-                {
-                    "nameNew": "",
-                    "birthDateNew": "",
-                    "typeNew": ""
-                }
-                """.trimIndent(),
-            )
+            generator.patchSignals(resetPetSignals("New"))
             generator.patchElements(
                 "",
                 PatchElementsOptions(
@@ -194,17 +178,31 @@ class PetController(
                 ownerPet.name = pet.name
                 ownerPet.birthDate = pet.birthDate
                 ownerPet.type = pet.type
-                generator.patchElements(ownersDetails.defaultPetsTableView.render(owner))
+                generator.patchElements(ownersDetails.petRow.render(pet))
+                generator.patchSignals(resetPetSignals(petId.toString()))
             }
             stream.flush()
         }
 
     @GetMapping(Routes.PET_EDIT_CANCEL)
-    fun cancelUpdate(owner: Owner): StreamingResponseBody =
+    fun cancelUpdate(
+        @PathVariable("petId") petId: Int,
+    ): StreamingResponseBody =
         StreamingResponseBody { stream ->
             val response = adapterResponse(stream)
             val generator = ServerSentEventGenerator(response)
-            generator.patchElements(ownersDetails.defaultPetsTableView.render(owner))
+            val pet = pets.findById(petId)
+            generator.patchElements(ownersDetails.petRow.render(pet))
+            generator.patchSignals(resetPetSignals(petId.toString()))
             stream.flush()
         }
+
+    private fun resetPetSignals(suffix: String) =
+        """
+        {
+            "name$suffix": null,
+            "birthDate$suffix": null,
+            "type$suffix": null
+        }
+        """.trimIndent()
 }

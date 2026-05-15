@@ -76,17 +76,25 @@ internal fun Tbody<*>.tableBodyPetsAndVisits(editing: Signal<Boolean?>) {
     dyn { owner: Owner ->
         owner.getPets().forEach { pet ->
             tr {
-                attrId("row-pet-${pet.id}")
-                petRow(pet)
-                td {
-                    addAttr("valign", "top")
-                    table {
-                        attrClass("visits-table")
-                        visitsTableHead()
-                        visitsTableBody(owner, pet, editing)
-                    }
-                }
+                petRowAndVisits(owner, pet, editing)
             }
+        }
+    }
+}
+
+internal fun Tr<*>.petRowAndVisits(
+    owner: Owner,
+    pet: Pet,
+    editing: Signal<Boolean?>,
+) {
+    attrId("row-pet-${pet.id}")
+    petRow(pet)
+    td {
+        addAttr("valign", "top")
+        table {
+            attrClass("visits-table")
+            visitsTableHead()
+            visitsTableBody(owner, pet, editing)
         }
     }
 }
@@ -190,7 +198,7 @@ internal fun Tbody<*>.petEditButtons(editing: Signal<Boolean?>) {
                     attrClass("btn btn-primary")
                     dataOn(Click) {
                         editing.setValue(false)
-                        get(Routes.petEditCancel(pet.owner!!.id))
+                        get(Routes.petEditCancel(pet.owner!!.id, pet.id))
                     }
                     val fetching = dataIndicator("_fetching")
                     dataAttr("disabled") { +fetching }

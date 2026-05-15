@@ -14,7 +14,7 @@ import org.springframework.samples.petclinic.views.fragments.rowElementInput
 import org.springframework.samples.petclinic.views.pets.addNewPetButton
 import org.springframework.samples.petclinic.views.pets.editPet
 import org.springframework.samples.petclinic.views.pets.petAddButtons
-import org.springframework.samples.petclinic.views.pets.petRow
+import org.springframework.samples.petclinic.views.pets.petRowAndVisits
 import org.springframework.samples.petclinic.views.pets.petsInputs
 import org.springframework.samples.petclinic.views.pets.tableBodyPetsAndVisits
 import org.springframework.stereotype.Component
@@ -99,7 +99,7 @@ class OwnersDetails(
             tr {
                 dyn { pet: Pet ->
                     attrId("row-pet-${pet.id}")
-                    petRow(pet)
+                    petRowAndVisits(pet.owner!!, pet, editing)
                 }
             }
         }
