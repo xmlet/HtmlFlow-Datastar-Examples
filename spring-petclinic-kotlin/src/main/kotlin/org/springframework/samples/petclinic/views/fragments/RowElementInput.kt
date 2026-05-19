@@ -3,7 +3,6 @@ package org.springframework.samples.petclinic.views.fragments
 import org.xmlet.htmlapifaster.Dd
 import org.xmlet.htmlapifaster.EnumTypeInputType
 import org.xmlet.htmlapifaster.Tr
-import org.xmlet.htmlapifaster.div
 import org.xmlet.htmlapifaster.input
 import org.xmlet.htmlapifaster.td
 import org.xmlet.htmlflow.datastar.attributes.dataAttr
@@ -13,7 +12,6 @@ import org.xmlet.htmlflow.datastar.attributes.dataIndicator
 internal fun Tr<*>.rowElementInput(
     signalName: String,
     type: EnumTypeInputType = EnumTypeInputType.TEXT,
-    errorId: String? = null,
 ) {
     td {
         input {
@@ -21,12 +19,6 @@ internal fun Tr<*>.rowElementInput(
             dataBind(signalName)
             val fetching = dataIndicator("_fetching")
             dataAttr("disabled") { +fetching }
-        }
-        if (errorId != null) {
-            div {
-                attrId(errorId)
-                attrClass("error")
-            }
         }
     }
 }

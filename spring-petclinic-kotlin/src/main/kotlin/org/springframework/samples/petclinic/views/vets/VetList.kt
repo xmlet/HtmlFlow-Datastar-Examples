@@ -6,7 +6,15 @@ import org.springframework.samples.petclinic.vet.Specialty
 import org.springframework.samples.petclinic.vet.Vets
 import org.springframework.samples.petclinic.views.fragments.layout
 import org.springframework.stereotype.Component
-import org.xmlet.htmlapifaster.*
+import org.xmlet.htmlapifaster.Div
+import org.xmlet.htmlapifaster.Table
+import org.xmlet.htmlapifaster.h2
+import org.xmlet.htmlapifaster.span
+import org.xmlet.htmlapifaster.table
+import org.xmlet.htmlapifaster.td
+import org.xmlet.htmlapifaster.th
+import org.xmlet.htmlapifaster.thead
+import org.xmlet.htmlapifaster.tr
 import java.util.stream.Collectors
 
 @Component

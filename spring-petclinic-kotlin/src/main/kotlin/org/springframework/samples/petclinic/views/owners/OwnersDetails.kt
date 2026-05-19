@@ -1,6 +1,7 @@
 package org.springframework.samples.petclinic.views.owners
 
 import htmlflow.HtmlView
+import htmlflow.div
 import htmlflow.dyn
 import htmlflow.tbody
 import htmlflow.tr
@@ -9,11 +10,12 @@ import org.springframework.samples.petclinic.Routes
 import org.springframework.samples.petclinic.owner.Owner
 import org.springframework.samples.petclinic.pet.Pet
 import org.springframework.samples.petclinic.pet.PetRepository
+import org.springframework.samples.petclinic.views.fragments.errorDiv
 import org.springframework.samples.petclinic.views.fragments.layout
 import org.springframework.samples.petclinic.views.fragments.rowElementInput
 import org.springframework.samples.petclinic.views.pets.addNewPetButton
-import org.springframework.samples.petclinic.views.pets.editPet
 import org.springframework.samples.petclinic.views.pets.petAddButtons
+import org.springframework.samples.petclinic.views.pets.petEditButtons
 import org.springframework.samples.petclinic.views.pets.petRowAndVisits
 import org.springframework.samples.petclinic.views.pets.petsInputs
 import org.springframework.samples.petclinic.views.pets.tableBodyPetsAndVisits
@@ -37,6 +39,8 @@ import org.xmlet.htmlflow.datastar.attributes.dataOn
 import org.xmlet.htmlflow.datastar.attributes.dataSignal
 import org.xmlet.htmlflow.datastar.events.Click
 
+internal const val ERROR_MSG = "Either fields are empty or telephone number has other characters."
+
 @Component
 class OwnersDetails(
     private val pets: PetRepository,
@@ -58,6 +62,15 @@ class OwnersDetails(
             tbody {
                 attrId("owner-table-body")
                 ownerEditTable()
+            }
+        }
+
+    val errorEditOwnerView: HtmlView<String> =
+        view {
+            div {
+                dyn { errorMsg: String ->
+                    errorDiv(errorMsg)
+                }
             }
         }
 
@@ -91,7 +104,24 @@ class OwnersDetails(
 
     val petEditRow: HtmlView<Pet> =
         view {
-            editPet(pets, editing)
+            tr {
+                dyn { pet: Pet ->
+                    attrId("row-pet-${pet.id}")
+                    td {
+                        addAttr("valign", "top")
+                        petsInputs(pets, "${pet.id}")
+                    }
+                }
+                td {
+                    addAttr("valign", "top")
+                    table {
+                        attrClass("visits-table")
+                        tbody {
+                            petEditButtons(editing)
+                        }
+                    }
+                }
+            }
         }
 
     val petRow: HtmlView<Pet> =
@@ -203,7 +233,7 @@ class OwnersDetails(
         }
         tr {
             th { text("Telephone") }
-            rowElementInput("telephone", errorId = "telephone-error")
+            rowElementInput("telephone")
         }
         tr {
             td {

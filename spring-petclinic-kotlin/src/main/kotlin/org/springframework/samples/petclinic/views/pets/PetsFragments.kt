@@ -1,8 +1,6 @@
 package org.springframework.samples.petclinic.views.pets
 
-import htmlflow.HtmlPage
 import htmlflow.dyn
-import htmlflow.tr
 import org.springframework.samples.petclinic.Routes
 import org.springframework.samples.petclinic.owner.Owner
 import org.springframework.samples.petclinic.pet.Pet
@@ -23,7 +21,6 @@ import org.xmlet.htmlapifaster.i
 import org.xmlet.htmlapifaster.option
 import org.xmlet.htmlapifaster.select
 import org.xmlet.htmlapifaster.table
-import org.xmlet.htmlapifaster.tbody
 import org.xmlet.htmlapifaster.td
 import org.xmlet.htmlapifaster.tr
 import org.xmlet.htmlflow.datastar.Signal
@@ -34,30 +31,6 @@ import org.xmlet.htmlflow.datastar.attributes.dataOn
 import org.xmlet.htmlflow.datastar.events.Click
 
 // Used in OwnersDetails
-internal fun HtmlPage.editPet(
-    pets: PetRepository,
-    editing: Signal<Boolean?>,
-) {
-    tr {
-        dyn { pet: Pet ->
-            attrId("row-pet-${pet.id}")
-            td {
-                addAttr("valign", "top")
-                petsInputs(pets, "${pet.id}")
-            }
-        }
-        td {
-            addAttr("valign", "top")
-            table {
-                attrClass("visits-table")
-                tbody {
-                    petEditButtons(editing)
-                }
-            }
-        }
-    }
-}
-
 internal fun Div<*>.addNewPetButton(editing: Signal<Boolean?>) {
     button {
         dataAttr("disabled") { +editing }

@@ -1,6 +1,8 @@
 package org.springframework.samples.petclinic.views.owners
 
 import htmlflow.HtmlView
+import htmlflow.dyn
+import org.springframework.samples.petclinic.views.fragments.errorDiv
 import org.springframework.samples.petclinic.views.fragments.layout
 import org.springframework.samples.petclinic.views.fragments.partialInputField
 import org.springframework.stereotype.Component
@@ -17,7 +19,14 @@ import org.xmlet.htmlflow.datastar.attributes.dataSignal
 class OwnersCreate {
     val view: HtmlView<Any> = layout { ownersCreate() }
 
-    private fun Div<*>.ownersCreate() {
+    val errorView: HtmlView<Any> =
+        layout {
+            dyn { errorMsg: String ->
+                ownersCreate(errorMsg)
+            }
+        }
+
+    private fun Div<*>.ownersCreate(errorMsg: String = "") {
         h2 { text("Owner") }
         form {
             attrClass("form-horizontal")
@@ -60,6 +69,9 @@ class OwnersCreate {
                     "",
                     telephone,
                 )
+                if (errorMsg.isNotEmpty()) {
+                    errorDiv(errorMsg)
+                }
             }
             div {
                 attrClass("form-group")

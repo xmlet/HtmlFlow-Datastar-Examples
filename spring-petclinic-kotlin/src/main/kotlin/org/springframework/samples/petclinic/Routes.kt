@@ -7,7 +7,6 @@ object Routes {
     const val OWNERS = "/owners"
     const val OWNERS_ID = "/owners/{ownerId}"
     const val OWNERS_EDIT = "/owners/{ownerId}/edit"
-    const val OWNERS_CREATE_OR_UPDATE = "/owners/createOrUpdateOwnerForm"
     const val OWNERS_EDIT_CANCEL = "/owners/{ownerId}/edit/cancel"
     const val PET_NEW = "/owners/{ownerId}/pets/new"
     const val PET_NEW_CANCEL = "/owners/{ownerId}/pets/new/cancel"

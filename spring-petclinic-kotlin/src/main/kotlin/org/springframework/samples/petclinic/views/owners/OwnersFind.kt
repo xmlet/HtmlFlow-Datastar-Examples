@@ -37,6 +37,14 @@ import kotlin.time.Duration.Companion.milliseconds
 class OwnersFind {
     val view: HtmlView<Any> = layout { findOwners() }
 
+    val activeSearchOwnerRowsFragment: HtmlView<Collection<Owner>> =
+        view {
+            tbody {
+                attrId("owners-table")
+                ownerRows()
+            }
+        }
+
     private fun Div<*>.findOwners() {
         h2 { text("Find Owners") }
 
@@ -85,14 +93,6 @@ class OwnersFind {
             }
         }
     }
-
-    val activeSearchOwnerRowsFragment: HtmlView<Collection<Owner>> =
-        view {
-            tbody {
-                attrId("owners-table")
-                ownerRows()
-            }
-        }
 
     private fun Form<*>.findOwnerButton() {
         div {

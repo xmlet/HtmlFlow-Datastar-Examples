@@ -15,6 +15,8 @@
  */
 package org.springframework.samples.petclinic.owner
 
+import dev.datastar.kotlin.sdk.ElementPatchMode
+import dev.datastar.kotlin.sdk.PatchElementsOptions
 import dev.datastar.kotlin.sdk.blocking.ServerSentEventGenerator
 import jakarta.validation.Valid
 import kotlinx.serialization.json.Json
@@ -27,6 +29,7 @@ import org.springframework.samples.petclinic.signal.FindOwnersSignal
 import org.springframework.samples.petclinic.signal.OwnerEditSignal
 import org.springframework.samples.petclinic.system.DatastarSignal
 import org.springframework.samples.petclinic.system.adapterResponse
+import org.springframework.samples.petclinic.views.owners.ERROR_MSG
 import org.springframework.samples.petclinic.views.owners.OwnersCreate
 import org.springframework.samples.petclinic.views.owners.OwnersDetails
 import org.springframework.samples.petclinic.views.owners.OwnersFind
@@ -78,8 +81,8 @@ class OwnerController(
         result: BindingResult,
     ): ResponseEntity<String> =
         if (result.hasErrors()) {
-            result.reject("createError", "Please fix the validation errors and try again")
-            ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(ownersCreate.view.render())
+            result.reject("createError", ERROR_MSG)
+            ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(ownersCreate.errorView.render(ERROR_MSG))
         } else {
             owners.save(owner)
             ResponseEntity
@@ -132,29 +135,6 @@ class OwnerController(
         }
     }
 
-    @GetMapping(Routes.OWNERS_CREATE_OR_UPDATE)
-    fun initUpdateOwnerForm(
-        @PathVariable("ownerId") ownerId: Int,
-    ): ResponseEntity<String> {
-        val owner = owners.findById(ownerId)
-        return ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(ownersCreate.view.render(owner))
-    }
-
-    @PostMapping(Routes.OWNERS_CREATE_OR_UPDATE)
-    fun processUpdateOwnerForm(
-        @Valid owner: Owner,
-        result: BindingResult,
-        @PathVariable("ownerId") ownerId: Int,
-    ): ResponseEntity<String> =
-        if (result.hasErrors()) {
-            result.reject("createError", "Please fix the validation errors and try again")
-            ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(ownersCreate.view.render(owner))
-        } else {
-            owner.id = ownerId
-            this.owners.save(owner)
-            ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(ownersDetails.view.render(owner))
-        }
-
     /**
      * Custom handler for displaying an owner.
      *
@@ -204,21 +184,29 @@ class OwnerController(
             val response = adapterResponse(stream)
             val generator = ServerSentEventGenerator(response)
             val editedOwner = json.decodeFromString<OwnerEditSignal>(datastarBody)
-            val owner = owners.findById(ownerId)
-            owner.firstName = editedOwner.firstName
-            owner.lastName = editedOwner.lastName
-            owner.address = editedOwner.address
-            owner.city = editedOwner.city
-            owner.telephone = editedOwner.telephone
-            val phoneErrorMessage = "numeric value out of bounds (<10 digits>.<0 digits> expected)"
-            val hasPhoneError = !owner.telephone.matches(Regex("^\\d{1,10}$"))
-            if (hasPhoneError) {
+            if (!editedOwnerIsValid(editedOwner)) {
                 generator.patchElements(
-                    """
-                    <div id="telephone-error" class="error">$phoneErrorMessage</div>
-                    """.trimIndent(),
+                    "",
+                    PatchElementsOptions(
+                        "#error",
+                        ElementPatchMode.Remove,
+                    ),
                 )
+                generator.patchElements(
+                    ownersDetails.errorEditOwnerView.render(ERROR_MSG),
+                    PatchElementsOptions(
+                        selector = "#owner-table-body",
+                        ElementPatchMode.Append,
+                    ),
+                )
+                generator.patchSignals("""{"_editing": true}""")
             } else {
+                val owner = owners.findById(ownerId)
+                owner.firstName = editedOwner.firstName
+                owner.lastName = editedOwner.lastName
+                owner.address = editedOwner.address
+                owner.city = editedOwner.city
+                owner.telephone = editedOwner.telephone
                 owners.save(owner)
                 generator.patchElements(ownersDetails.defaultOwnerTableView.render(owner))
                 generator.patchSignals(resetOwnerSignals())
@@ -249,4 +237,12 @@ class OwnerController(
          "telephone": null
         }
         """.trimIndent()
+
+    private fun editedOwnerIsValid(editedOwner: OwnerEditSignal): Boolean =
+        editedOwner.city.isNotEmpty() &&
+            editedOwner.firstName.isNotEmpty() &&
+            editedOwner.lastName.isNotEmpty() &&
+            editedOwner.address.isNotEmpty() &&
+            editedOwner.telephone.matches(Regex("^\\d{1,10}$"))
+
 }

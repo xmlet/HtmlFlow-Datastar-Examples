@@ -1,29 +1,13 @@
-/*
- * Copyright 2002-2017 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package org.springframework.samples.petclinic.owner
+package org.springframework.samples.petclinic.visit
 
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.samples.petclinic.Routes
+import org.springframework.samples.petclinic.owner.OwnerRepository
 import org.springframework.samples.petclinic.pet.PetRepository
 import org.springframework.samples.petclinic.views.visits.CreateOrUpdateVisitForm
-import org.springframework.samples.petclinic.visit.Visit
-import org.springframework.samples.petclinic.visit.VisitRepository
 import org.springframework.stereotype.Controller
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.WebDataBinder
@@ -33,6 +17,8 @@ import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import java.net.URI
+
+const val VISITS_ERROR_MSG = "Missing fields."
 
 /**
  * @author Juergen Hoeller
@@ -68,10 +54,8 @@ class VisitController(
     @ModelAttribute("visit")
     fun loadPetWithVisit(
         @PathVariable("petId") petId: Int,
-        model: MutableMap<String, Any>,
     ): Visit {
         val pet = pets.findById(petId)
-        model["pet"] = pet
         val visit = Visit()
         visit.petId = pet.id
         pet.addVisit(visit)
@@ -100,11 +84,11 @@ class VisitController(
     ): ResponseEntity<String> {
         val pet = pets.findById(petId)
         return if (result.hasErrors()) {
-            result.reject("createError", "Please fix the validation errors and try again")
+            result.reject("createError", VISITS_ERROR_MSG)
             ResponseEntity
                 .ok()
                 .contentType(MediaType.TEXT_HTML)
-                .body(createOrUpdateVisitForm.view.render(pet))
+                .body(createOrUpdateVisitForm.errorView.render(pet))
         } else {
             visits.save(visit)
             ResponseEntity

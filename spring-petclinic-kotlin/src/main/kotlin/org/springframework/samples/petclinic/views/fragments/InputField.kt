@@ -25,6 +25,7 @@ fun Div<*>.partialInputField(
         div {
             attrClass("col-sm-10")
             div {
+                attrId("$id-input-div")
                 input {
                     attrClass("form-control")
                     attrType(type)

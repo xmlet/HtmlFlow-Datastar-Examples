@@ -4,10 +4,29 @@ import htmlflow.HtmlView
 import htmlflow.dyn
 import org.springframework.samples.petclinic.Routes
 import org.springframework.samples.petclinic.pet.Pet
+import org.springframework.samples.petclinic.views.fragments.errorDiv
 import org.springframework.samples.petclinic.views.fragments.layout
 import org.springframework.samples.petclinic.views.fragments.partialInputField
+import org.springframework.samples.petclinic.visit.VISITS_ERROR_MSG
 import org.springframework.stereotype.Component
-import org.xmlet.htmlapifaster.*
+import org.xmlet.htmlapifaster.Div
+import org.xmlet.htmlapifaster.EnumMethodType
+import org.xmlet.htmlapifaster.EnumTypeButtonType
+import org.xmlet.htmlapifaster.EnumTypeInputType
+import org.xmlet.htmlapifaster.Table
+import org.xmlet.htmlapifaster.b
+import org.xmlet.htmlapifaster.br
+import org.xmlet.htmlapifaster.button
+import org.xmlet.htmlapifaster.div
+import org.xmlet.htmlapifaster.form
+import org.xmlet.htmlapifaster.h2
+import org.xmlet.htmlapifaster.input
+import org.xmlet.htmlapifaster.table
+import org.xmlet.htmlapifaster.tbody
+import org.xmlet.htmlapifaster.td
+import org.xmlet.htmlapifaster.th
+import org.xmlet.htmlapifaster.thead
+import org.xmlet.htmlapifaster.tr
 import org.xmlet.htmlflow.datastar.attributes.dataSignal
 import java.time.LocalDate
 
@@ -15,7 +34,9 @@ import java.time.LocalDate
 class CreateOrUpdateVisitForm {
     val view: HtmlView<Any> = layout { createOrUpdateForm() }
 
-    private fun Div<*>.createOrUpdateForm() {
+    val errorView: HtmlView<Any> = layout { createOrUpdateForm(VISITS_ERROR_MSG) }
+
+    private fun Div<*>.createOrUpdateForm(errorMsg: String = "") {
         h2 { text("New Visit") }
         b { text("Pet") }
         table {
@@ -35,6 +56,9 @@ class CreateOrUpdateVisitForm {
                 attrClass("form-group has-feedback")
                 partialInputField("Date", "date", LocalDate.now(), dateSignal, EnumTypeInputType.DATE)
                 partialInputField("Description", "description", "", descriptionSignal)
+                if (errorMsg.isNotEmpty()) {
+                    errorDiv(errorMsg)
+                }
             }
             div {
                 attrClass("form-group")
@@ -59,14 +83,18 @@ class CreateOrUpdateVisitForm {
         b { text("Previous Visits") }
         table {
             attrClass("table table-striped")
-            tbody {
+            thead {
                 tr {
                     th { text("Date") }
                     th { text("Description") }
-                    dyn { pet: Pet ->
-                        pet.getVisits().forEach { v ->
+                }
+            }
+            tbody {
+                dyn { pet: Pet ->
+                    pet.getVisits().forEach { v ->
+                        tr {
                             td { text(v.date) }
-                            td { text(v.description) }
+                            td { text(if (v.description != null) v.description else "") }
                         }
                     }
                 }
