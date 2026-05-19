@@ -8,9 +8,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
-import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
+import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.samples.petclinic.Routes
 import org.springframework.samples.petclinic.pet.Pet
@@ -27,9 +27,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
-import java.util.*
 
 /**
  * Test class for [OwnerController]
@@ -38,6 +38,7 @@ import java.util.*
  */
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(OwnerController::class)
+@Import(OwnersDetails::class, OwnersFind::class, OwnersList::class, OwnersCreate::class)
 class OwnerControllerTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -51,16 +52,16 @@ class OwnerControllerTest {
     @MockitoBean
     private lateinit var pets: PetRepository
 
-    @MockitoBean
+    @Autowired
     private lateinit var ownersDetails: OwnersDetails
 
-    @MockitoBean
+    @Autowired
     private lateinit var ownersFind: OwnersFind
 
-    @MockitoBean
+    @Autowired
     private lateinit var ownersList: OwnersList
 
-    @MockitoBean
+    @Autowired
     private lateinit var ownersCreate: OwnersCreate
 
     private lateinit var george: Owner
@@ -76,34 +77,80 @@ class OwnerControllerTest {
         george.telephone = "6085551023"
         val max = Pet()
         val dog = PetType()
+        dog.name = "dog"
         max.id = 1
         max.type = dog
         max.name = "Max"
         max.birthDate = LocalDate.now()
+        max.owner = george
         george.pets = mutableSetOf(max)
-        given(owners.findById(TEST_OWNER_ID)).willReturn(george)
+        given(this.owners.findById(TEST_OWNER_ID)).willReturn(george)
         val visit = Visit()
         visit.date = LocalDate.now()
-        given(this.visits.findByPetId(max.id!!)).willReturn(Collections.singleton(visit))
+        visit.description = "Visit checkup routine."
+        visit.petId = max.id
+        given(this.visits.findByPetId(max.id!!)).willReturn(mutableSetOf(visit))
         given(owners.findByLastName("")).willReturn(Lists.newArrayList(george))
+        given(pets.findPetTypes()).willReturn(Lists.newArrayList(dog))
     }
 
-    //TODO
     @Test
     fun testInitCreationForm() {
         mockMvc
-            .perform(get("/owners/new"))
+            .perform(get(Routes.OWNERS_NEW))
             .andExpect(status().isOk)
-            .andExpect(model().attributeExists("owner"))
-            .andExpect(view().name("owners/createOrUpdateOwnerForm"))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+            .andExpect(content().string(containsString("<form class=\"form-horizontal\" id=\"add-owner-form\" method=\"post\">")))
+            .andExpect(
+                content()
+                    .string(
+                        containsString(
+                            "div data-signals:first-name=\"\" data-signals:last-name=\"\" data-signals:address=\"\" data-signals:city=\"\" data-signals:telephone=\"\" class=\"form-group has-feedback\">",
+                        ),
+                    ),
+            ).andExpect(
+                content()
+                    .string(
+                        containsString(
+                            "<input class=\"form-control\" type=\"text\" id=\"firstName\" name=\"firstName\" data-bind:first-name=\"\" value=\"\">",
+                        ),
+                    ),
+            ).andExpect(
+                content()
+                    .string(
+                        containsString(
+                            "<input class=\"form-control\" type=\"text\" id=\"lastName\" name=\"lastName\" data-bind:last-name=\"\" value=\"\">",
+                        ),
+                    ),
+            ).andExpect(
+                content()
+                    .string(
+                        containsString(
+                            "<input class=\"form-control\" type=\"text\" id=\"address\" name=\"address\" data-bind:address=\"\" value=\"\">",
+                        ),
+                    ),
+            ).andExpect(
+                content()
+                    .string(
+                        containsString(
+                            "<input class=\"form-control\" type=\"text\" id=\"city\" name=\"city\" data-bind:city=\"\" value=\"\">",
+                        ),
+                    ),
+            ).andExpect(
+                content()
+                    .string(
+                        containsString(
+                            "<input class=\"form-control\" type=\"text\" id=\"telephone\" name=\"telephone\" data-bind:telephone=\"\" value=\"\">",
+                        ),
+                    ),
+            )
     }
 
-    //TODO
     @Test
     fun testProcessCreationFormSuccess() {
         mockMvc
             .perform(
-                post("/owners/new")
+                post(Routes.OWNERS_NEW)
                     .param("firstName", "Joe")
                     .param("lastName", "Bloggs")
                     .param("address", "123 Caramel Street")
@@ -112,20 +159,66 @@ class OwnerControllerTest {
             ).andExpect(status().is3xxRedirection)
     }
 
-    //TODO
     @Test
     fun testProcessCreationFormHasErrors() {
         mockMvc
             .perform(
-                post("/owners/new")
+                post(Routes.OWNERS_NEW)
                     .param("firstName", "Joe")
                     .param("lastName", "Bloggs")
                     .param("city", "London"),
             ).andExpect(status().isOk)
-            .andExpect(model().attributeHasErrors("owner"))
-            .andExpect(model().attributeHasFieldErrors("owner", "address"))
-            .andExpect(model().attributeHasFieldErrors("owner", "telephone"))
-            .andExpect(view().name("owners/createOrUpdateOwnerForm"))
+            .andExpect(content().string(containsString("<form class=\"form-horizontal\" id=\"add-owner-form\" method=\"post\">")))
+            .andExpect(
+                content()
+                    .string(
+                        containsString(
+                            "div data-signals:first-name=\"\" data-signals:last-name=\"\" data-signals:address=\"\" data-signals:city=\"\" data-signals:telephone=\"\" class=\"form-group has-feedback\">",
+                        ),
+                    ),
+            ).andExpect(
+                content()
+                    .string(
+                        containsString(
+                            "<input class=\"form-control\" type=\"text\" id=\"firstName\" name=\"firstName\" data-bind:first-name=\"\" value=\"\">",
+                        ),
+                    ),
+            ).andExpect(
+                content()
+                    .string(
+                        containsString(
+                            "<input class=\"form-control\" type=\"text\" id=\"lastName\" name=\"lastName\" data-bind:last-name=\"\" value=\"\">",
+                        ),
+                    ),
+            ).andExpect(
+                content()
+                    .string(
+                        containsString(
+                            "<input class=\"form-control\" type=\"text\" id=\"address\" name=\"address\" data-bind:address=\"\" value=\"\">",
+                        ),
+                    ),
+            ).andExpect(
+                content()
+                    .string(
+                        containsString(
+                            "<input class=\"form-control\" type=\"text\" id=\"city\" name=\"city\" data-bind:city=\"\" value=\"\">",
+                        ),
+                    ),
+            ).andExpect(
+                content()
+                    .string(
+                        containsString(
+                            "<input class=\"form-control\" type=\"text\" id=\"telephone\" name=\"telephone\" data-bind:telephone=\"\" value=\"\">",
+                        ),
+                    ),
+            ).andExpect(
+                content()
+                    .string(
+                        containsString(
+                            "Either fields are empty or telephone number has other characters.",
+                        ),
+                    ),
+            )
     }
 
     @Test
@@ -160,7 +253,7 @@ class OwnerControllerTest {
     }
 
     @Test
-    fun testProcessFindFormSuccess() {
+    fun testProcessFindFormInit() {
         given(owners.findByLastName("")).willReturn(Lists.newArrayList(george, Owner()))
         mockMvc
             .perform(get(Routes.OWNERS))
@@ -181,92 +274,115 @@ class OwnerControllerTest {
             .andExpect(content().string(containsString("Max")))
     }
 
-    //TODO
     @Test
-    fun testProcessFindFormByLastName() {
+    fun testProcessFindFormByLastNameOneResult() {
         given(owners.findByLastName(george.lastName)).willReturn(Lists.newArrayList(george))
         mockMvc
             .perform(
-                get("/owners")
+                get(Routes.OWNERS)
                     .param("lastName", "Franklin"),
             ).andExpect(status().is3xxRedirection)
-            .andExpect(view().name("redirect:/owners/$TEST_OWNER_ID"))
     }
 
-    //TODO
     @Test
     fun testProcessFindFormNoOwnersFound() {
         mockMvc
             .perform(
-                get("/owners")
+                get(Routes.OWNERS)
                     .param("lastName", "Unknown Surname"),
             ).andExpect(status().isOk)
-            .andExpect(model().attributeHasFieldErrors("owner", "lastName"))
-            .andExpect(model().attributeHasFieldErrorCode("owner", "lastName", "notFound"))
-            .andExpect(view().name("owners/findOwners"))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+            .andExpect(content().string(containsString("Owners")))
+            .andExpect(
+                content()
+                    .string(containsString("<form class=\"form-horizontal\" id=\"search-owner-form\" action=\"/owners\" method=\"get\">")),
+            ).andExpect(content().string(containsString("<label class=\"col-sm-2 control-label\">")))
+            .andExpect(content().string(containsString("<input class=\"fom\" type=\"text\" name=\"lastName\"")))
+            .andExpect(content().string(containsString("First Name")))
+            .andExpect(content().string(containsString("Last Name")))
+            .andExpect(content().string(containsString("Pets")))
+            .andExpect(content().string(containsString("<tbody id=\"owners-table\">")))
+            .andExpect(
+                content()
+                    .string(
+                        not(
+                            containsString(
+                                "<tr onclick=\"window.location='/owners/1'\" style=\"cursor: pointer;\" onmouseover=\"this.style.backgroundColor='#f5f5f5'\" onmouseout=\"this.style.backgroundColor='' \">",
+                            ),
+                        ),
+                    ),
+            ).andExpect(content().string(not(containsString("George"))))
+            .andExpect(content().string(containsString("Find Owner")))
+            .andExpect(content().string(containsString("<a class=\"btn btn-primary\" href=\"/owners/new\">")))
+            .andExpect(content().string(containsString("Add Owner")))
     }
 
-    //TODO
-    @Test
-    fun testInitUpdateOwnerForm() {
-        mockMvc
-            .perform(get("/owners/{ownerId}/edit", TEST_OWNER_ID))
-            .andExpect(status().isOk)
-            .andExpect(model().attributeExists("owner"))
-            .andExpect(model().attribute("owner", hasProperty<Any>("lastName", `is`("Franklin"))))
-            .andExpect(model().attribute("owner", hasProperty<Any>("firstName", `is`("George"))))
-            .andExpect(model().attribute("owner", hasProperty<Any>("address", `is`("110 W. Liberty St."))))
-            .andExpect(model().attribute("owner", hasProperty<Any>("city", `is`("Madison"))))
-            .andExpect(model().attribute("owner", hasProperty<Any>("telephone", `is`("6085551023"))))
-            .andExpect(view().name("owners/createOrUpdateOwnerForm"))
-    }
-
-    //TODO
-    @Test
-    fun testProcessUpdateOwnerFormSuccess() {
-        mockMvc
-            .perform(
-                post("/owners/{ownerId}/edit", TEST_OWNER_ID)
-                    .param("firstName", "Joe")
-                    .param("lastName", "Bloggs")
-                    .param("address", "123 Caramel Street")
-                    .param("city", "London")
-                    .param("telephone", "01616291589"),
-            ).andExpect(status().is3xxRedirection)
-            .andExpect(view().name("redirect:/owners/{ownerId}"))
-    }
-
-    //TODO
-    @Test
-    fun testProcessUpdateOwnerFormHasErrors() {
-        mockMvc
-            .perform(
-                post("/owners/{ownerId}/edit", TEST_OWNER_ID)
-                    .param("firstName", "Joe")
-                    .param("lastName", "Bloggs")
-                    .param("city", "London"),
-            ).andExpect(status().isOk)
-            .andExpect(model().attributeHasErrors("owner"))
-            .andExpect(model().attributeHasFieldErrors("owner", "address"))
-            .andExpect(model().attributeHasFieldErrors("owner", "telephone"))
-            .andExpect(view().name("owners/createOrUpdateOwnerForm"))
-    }
-
-    //TODO
     @Test
     fun testShowOwner() {
+        given(owners.findById(TEST_OWNER_ID)).willReturn(george)
         mockMvc
-            .perform(get("/owners/{ownerId}", TEST_OWNER_ID))
+            .perform(get(Routes.OWNERS_ID, TEST_OWNER_ID))
             .andExpect(status().isOk)
-            .andExpect(model().attribute("owner", hasProperty<Any>("lastName", `is`("Franklin"))))
-            .andExpect(model().attribute("owner", hasProperty<Any>("firstName", `is`("George"))))
-            .andExpect(model().attribute("owner", hasProperty<Any>("address", `is`("110 W. Liberty St."))))
-            .andExpect(model().attribute("owner", hasProperty<Any>("city", `is`("Madison"))))
-            .andExpect(model().attribute("owner", hasProperty<Any>("telephone", `is`("6085551023"))))
-            .andExpect(model().attribute("owner", hasProperty<Any>("pets", not<Any>(empty<Any>()))))
-            .andExpect(view().name("owners/ownerDetails"))
-
-        Mockito.verify(this.visits).findByPetId(1)
+            .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+            .andExpect(content().string(containsString("Owner Information")))
+            .andExpect(content().string(containsString("Name")))
+            .andExpect(content().string(containsString("${george.firstName} ${george.lastName}")))
+            .andExpect(content().string(containsString("Address")))
+            .andExpect(content().string(containsString(george.address)))
+            .andExpect(content().string(containsString("City")))
+            .andExpect(content().string(containsString(george.city)))
+            .andExpect(content().string(containsString("Telephone")))
+            .andExpect(content().string(containsString(george.telephone)))
+            .andExpect(
+                content()
+                    .string(
+                        containsString(
+                            "<button data-attr:disabled=\"\$_editing\" data-on:click=\"\$_editing = true; @get('/owners/${george.id}/edit')\" class=\"btn btn-primary\">",
+                        ),
+                    ),
+            ).andExpect(content().string(containsString("Edit Owner")))
+            .andExpect(
+                content()
+                    .string(
+                        containsString(
+                            "data-on:click=\"\$_editing = true; @get('/owners/1/pets/new')\"",
+                        ),
+                    ),
+            ).andExpect(content().string(containsString("Add New Pet")))
+            .andExpect(content().string(containsString("Pets and Visits")))
+            .andExpect(content().string(containsString("<tbody id=\"pets-table-body\">")))
+            .andExpect(content().string(containsString("<tr id=\"row-pet-${george.pets.first().id}\">")))
+            .andExpect(content().string(containsString("Name")))
+            .andExpect(content().string(containsString(george.pets.first().name)))
+            .andExpect(content().string(containsString("Birth Date")))
+            .andExpect(content().string(containsString("Type")))
+            .andExpect(
+                content().string(
+                    containsString(
+                        george.pets
+                            .first()
+                            .type
+                            .toString(),
+                    ),
+                ),
+            ).andExpect(content().string(containsString("<table class=\"visits-table\">")))
+            .andExpect(content().string(containsString("Visit Date")))
+            .andExpect(content().string(containsString("Description")))
+            .andExpect(
+                content()
+                    .string(
+                        containsString(
+                            "<button id=\"pet-edit\" class=\"btn btn-primary\" data-on:click=\"\$_editing = true; @get('/owners/${george.id}/pets/${george.pets.first().id}/edit')\" data-indicator:_fetching=\"\" data-attr:disabled=\"\$_fetching || \$_editing\">",
+                        ),
+                    ),
+            ).andExpect(
+                content()
+                    .string(
+                        containsString(
+                            "<a class=\"btn btn-primary\" href=\"/owners/${george.id}/pets/${george.pets.first().id}/visits/new\">",
+                        ),
+                    ),
+            ).andExpect(content().string(containsString("Add Visit")))
     }
 
     companion object {

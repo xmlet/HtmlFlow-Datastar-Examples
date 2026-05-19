@@ -58,7 +58,11 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("org.junit.jupiter:junit-jupiter-params")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+
+    // Playwright for end-to-end testing
+    testImplementation("com.microsoft.playwright:playwright:1.48.0")
 
     runtimeOnly("com.h2database:h2")
     runtimeOnly("com.mysql:mysql-connector-j")
@@ -74,6 +78,7 @@ dependencies {
 
     // Datastar SDK dependency
     implementation("dev.data-star.kotlin:kotlin-sdk:1.0.0-RC5")
+    testImplementation(kotlin("test"))
 }
 
 jib {
