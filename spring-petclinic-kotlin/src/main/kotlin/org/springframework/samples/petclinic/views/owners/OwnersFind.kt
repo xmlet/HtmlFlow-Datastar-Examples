@@ -9,18 +9,13 @@ import org.springframework.samples.petclinic.owner.Owner
 import org.springframework.samples.petclinic.views.fragments.layout
 import org.springframework.stereotype.Component
 import org.xmlet.htmlapifaster.Div
-import org.xmlet.htmlapifaster.EnumMethodType
-import org.xmlet.htmlapifaster.EnumTypeButtonType
 import org.xmlet.htmlapifaster.EnumTypeInputType
-import org.xmlet.htmlapifaster.Form
+import org.xmlet.htmlapifaster.Table
 import org.xmlet.htmlapifaster.Tbody
 import org.xmlet.htmlapifaster.a
-import org.xmlet.htmlapifaster.button
 import org.xmlet.htmlapifaster.div
-import org.xmlet.htmlapifaster.form
 import org.xmlet.htmlapifaster.h2
 import org.xmlet.htmlapifaster.input
-import org.xmlet.htmlapifaster.label
 import org.xmlet.htmlapifaster.table
 import org.xmlet.htmlapifaster.tbody
 import org.xmlet.htmlapifaster.td
@@ -35,99 +30,16 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @Component
 class OwnersFind {
-    val view: HtmlView<Any> = layout { findOwners() }
+    val view: HtmlView<Any> = layout { listOwners() }
 
     val activeSearchOwnerRowsFragment: HtmlView<Collection<Owner>> =
         view {
             tbody {
-                attrId("owners-table")
-                ownerRows()
+                tableBody()
             }
         }
 
-    private fun Div<*>.findOwners() {
-        h2 { text("Find Owners") }
-
-        form {
-            attrClass("form-horizontal")
-            attrId("search-owner-form")
-            attrAction(Routes.OWNERS)
-            attrMethod(EnumMethodType.GET)
-
-            div {
-                attrClass("form-group")
-                div {
-                    attrClass("control-group")
-                    attrId("lastNameGroup")
-                    label {
-                        attrClass("col-sm-2 control-label")
-                        text("Last name ")
-                    }
-                    div {
-                        attrClass("col-sm-10")
-                        activeSearchOwner()
-                        resultsTable()
-                    }
-                }
-            }
-
-            findOwnerButton()
-            newOwnerButton()
-        }
-    }
-
-    private fun Tbody<*>.ownerRows() {
-        dyn { owners: List<Owner> ->
-            owners.forEach { owner ->
-                tr {
-                    attrOnclick("window.location='${Routes.ownerId(owner.id)}'")
-                    attrStyle("cursor: pointer;")
-                    attrOnmouseover("this.style.backgroundColor='#f5f5f5'")
-                    attrOnmouseout("this.style.backgroundColor='' ")
-                    td {
-                        text(owner.firstName)
-                    }
-                    td { text(owner.lastName) }
-                    td { text(owner.pets) }
-                }
-            }
-        }
-    }
-
-    private fun Form<*>.findOwnerButton() {
-        div {
-            attrClass("col-sm-offset-2 col-sm-10")
-            button {
-                attrClass("btn btn-primary")
-                attrType(EnumTypeButtonType.SUBMIT)
-                text("Find Owner")
-            }
-        }
-    }
-
-    private fun Div<*>.resultsTable() {
-        table {
-            thead {
-                tr {
-                    th {
-                        attrStyle("padding-right: 16px;")
-                        text("First Name")
-                    }
-                    th {
-                        attrStyle("padding-right: 16px;")
-                        text("Last Name")
-                    }
-                    th { text("Pets") }
-                }
-            }
-            tbody {
-                attrId("owners-table")
-                ownerRows()
-            }
-        }
-    }
-
-    private fun Form<*>.newOwnerButton() {
+    private fun Div<*>.newOwnerButton() {
         div {
             a {
                 attrClass("btn btn-primary")
@@ -147,6 +59,69 @@ class OwnersFind {
             dataOn(Input) {
                 get(Routes.OWNERS_FIND_RESULT)
                 modifiers { debounce(200.milliseconds) }
+            }
+        }
+    }
+
+    private fun Div<*>.listOwners() {
+        h2 { text("Owners") }
+
+        activeSearchOwner()
+
+        table {
+            attrId("owners")
+            attrClass("table table-striped")
+            tableHead()
+            tbody {
+                tableBody()
+            }
+        }
+        newOwnerButton()
+    }
+
+    private fun Table<*>.tableHead() {
+        thead {
+            tr {
+                th {
+                    attrStyle("width: 150px;")
+                    text("Name")
+                }
+                th {
+                    attrStyle("width: 200px;")
+                    text("Address")
+                }
+                th { text("City") }
+                th {
+                    attrStyle("width: 120px;")
+                    text("Telephone")
+                }
+                th { text("Pets") }
+            }
+        }
+    }
+
+    private fun Tbody<*>.tableBody() {
+        attrId("results-table")
+        dyn { owners: List<Owner> ->
+            owners.forEach { owner ->
+                tr {
+                    td {
+                        a {
+                            attrHref(Routes.ownerId(owner.id))
+                            text(owner.firstName + " " + owner.lastName)
+                        }
+                    }
+                    td { text(owner.address) }
+                    td { text(owner.city) }
+                    td { text(owner.telephone) }
+                    td {
+                        span().of { span ->
+                            owner.getPets().forEach { pet ->
+                                span.text(pet.name + " ")
+                            }
+                        }
+                    }
+                }
             }
         }
     }

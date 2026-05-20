@@ -33,7 +33,6 @@ import org.springframework.samples.petclinic.views.owners.ERROR_MSG
 import org.springframework.samples.petclinic.views.owners.OwnersCreate
 import org.springframework.samples.petclinic.views.owners.OwnersDetails
 import org.springframework.samples.petclinic.views.owners.OwnersFind
-import org.springframework.samples.petclinic.views.owners.OwnersList
 import org.springframework.samples.petclinic.visit.VisitRepository
 import org.springframework.stereotype.Controller
 import org.springframework.validation.BindingResult
@@ -62,7 +61,6 @@ class OwnerController(
     private val ownersDetails: OwnersDetails,
 ) {
     val ownersFind = OwnersFind()
-    val ownersList = OwnersList()
     val ownersCreate = OwnersCreate()
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -91,12 +89,6 @@ class OwnerController(
                 .build()
         }
 
-    @GetMapping(Routes.OWNERS_FIND)
-    fun findOwners(): ResponseEntity<String> {
-        val allOwners = owners.findByLastName("")
-        return ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(ownersFind.view.render(allOwners))
-    }
-
     @GetMapping(Routes.OWNERS_FIND_RESULT, produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     fun getSearchOwners(
         @DatastarSignal signal: FindOwnersSignal,
@@ -110,30 +102,8 @@ class OwnerController(
         }
 
     @GetMapping(Routes.OWNERS)
-    fun processFindForm(owner: Owner): ResponseEntity<String> {
-        // find owners by last name
-        val results = owners.findByLastName(owner.lastName)
-        return when {
-            results.isEmpty() -> {
-                // no owners found
-                ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(ownersFind.view.render(emptyList<Owner>()))
-            }
-
-            results.size == 1 -> {
-                // 1 owner found
-                val foundOwner = results.first()
-                ResponseEntity
-                    .status(HttpStatus.SEE_OTHER)
-                    .location(URI.create(Routes.ownerId(foundOwner.id)))
-                    .build()
-            }
-
-            else -> {
-                // multiple owners found
-                ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(ownersList.view.render(results))
-            }
-        }
-    }
+    fun processFindForm(): ResponseEntity<String> =
+        ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(ownersFind.view.render(owners.findByLastName("")))
 
     /**
      * Custom handler for displaying an owner.
@@ -244,5 +214,4 @@ class OwnerController(
             editedOwner.lastName.isNotEmpty() &&
             editedOwner.address.isNotEmpty() &&
             editedOwner.telephone.matches(Regex("^\\d{1,10}$"))
-
 }

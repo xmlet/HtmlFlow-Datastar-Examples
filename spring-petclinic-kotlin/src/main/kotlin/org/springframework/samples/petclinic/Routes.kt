@@ -2,7 +2,6 @@ package org.springframework.samples.petclinic
 
 object Routes {
     const val OWNERS_NEW = "/owners/new"
-    const val OWNERS_FIND = "/owners/find"
     const val OWNERS_FIND_RESULT = "/owners/find/result"
     const val OWNERS = "/owners"
     const val OWNERS_ID = "/owners/{ownerId}"

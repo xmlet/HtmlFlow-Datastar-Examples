@@ -1,5 +1,6 @@
 package org.springframework.samples.petclinic.views.fragments
 
+import org.springframework.samples.petclinic.Routes
 import org.xmlet.htmlapifaster.EnumTypeButtonType
 import org.xmlet.htmlapifaster.Nav
 import org.xmlet.htmlapifaster.a
@@ -49,7 +50,7 @@ fun Nav<*>.navbarFragment() {
                     attrClass("nav-item")
                     a {
                         attrClass("nav-link")
-                        attrHref("/owners/find")
+                        attrHref(Routes.OWNERS)
                         attrTitle("find owners")
                         span {
                             attrClass("fa fa-search")
