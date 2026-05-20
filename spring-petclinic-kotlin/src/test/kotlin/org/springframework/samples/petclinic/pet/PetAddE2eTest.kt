@@ -42,12 +42,6 @@ class PetAddE2eTest {
                 // Wait for the form to appear
                 page.waitForTimeout(500.0)
 
-                // Log the page content to debug
-                val pageContentAfterClick = page.content()
-                println("=== PAGE CONTENT AFTER CLICKING ADD NEW PET ===")
-                println(pageContentAfterClick)
-                println("=== END PAGE CONTENT ===")
-
                 // Wait for the pet add form to appear with input fields
                 page.waitForSelector("input[data-bind\\:name-new]")
 
