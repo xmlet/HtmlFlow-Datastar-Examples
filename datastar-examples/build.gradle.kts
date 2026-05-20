@@ -24,7 +24,7 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:3.4.0")
 
     // Http4k dependencies
-    implementation(platform("org.http4k:http4k-bom:6.33.0.0"))
+    implementation(platform("org.http4k:http4k-bom:6.47.0.0"))
     implementation("org.http4k:http4k-core")
     implementation("org.http4k:http4k-server-jetty")
     implementation("org.http4k:http4k-web-datastar")
@@ -32,8 +32,8 @@ dependencies {
     // HtmlFlow-Datastar dependency
     implementation("com.github.xmlet:htmlflow-datastar-core:1.1.0-alpha.1")
 
-    // Datastar Kotlin dependencies
-    implementation("dev.data-star.kotlin:kotlin-sdk:1.0.0-RC3")
+    // Datastar Kotlin SDK non-blocking dependencies
+    implementation("dev.data-star.kotlin:kotlin-sdk-coroutines:1.0.0-RC5")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 
     implementation("org.slf4j:slf4j-simple:2.0.16")

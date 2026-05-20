@@ -1,10 +1,10 @@
 package pt.isel.ktor
 
-import dev.datastar.kotlin.sdk.ServerSentEventGenerator
+import dev.datastar.kotlin.sdk.coroutines.ServerSentEventGenerator
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode.Companion.OK
+import io.ktor.server.response.respondBytesWriter
 import io.ktor.server.response.respondText
-import io.ktor.server.response.respondTextWriter
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.get
@@ -15,6 +15,7 @@ import pt.isel.utils.response
 import pt.isel.views.fragments.hfLazyLoadDescription
 import pt.isel.views.htmlflow.hfLazyLoadDoc
 import pt.isel.views.htmlflow.hfLazyLoadView
+import kotlin.time.Duration.Companion.milliseconds
 
 private val html = loadResource("public/html/lazy-load.html")
 
@@ -36,19 +37,19 @@ private suspend fun RoutingContext.getLazyLoadHtmlFlow() {
 }
 
 private suspend fun RoutingContext.getLazyLoadGraph() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {
         val generator = ServerSentEventGenerator(response(this))
-        delay(2000)
+        delay(2000.milliseconds)
 
         generator.patchElements(hfLazyLoadView.render(TOKYO_IMAGE))
     }
 }
 
 private suspend fun RoutingContext.getLazyLoadDescription() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {

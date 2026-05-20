@@ -1,10 +1,11 @@
-package org.springframework.samples.petclinic.owner
+package org.springframework.samples.petclinic.pet
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest
+import org.springframework.samples.petclinic.owner.OwnerRepository
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
@@ -12,13 +13,11 @@ import java.time.LocalDate
 @ExtendWith(SpringExtension::class)
 @DataJpaTest
 class PetRepositoryTest(@param:Autowired private val pets: PetRepository, @param:Autowired private val owners: OwnerRepository) {
-
     @Test
     fun shouldFindPetWithCorrectId() {
         val pet7 = this.pets.findById(7)
         assertThat(pet7.name).startsWith("Samantha")
         assertThat(pet7.owner!!.firstName).isEqualTo("Jean")
-
     }
 
     @Test

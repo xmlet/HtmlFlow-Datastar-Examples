@@ -15,6 +15,10 @@
  */
 package org.springframework.samples.petclinic.system
 
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
+import org.springframework.samples.petclinic.views.fragments.layout
+import org.springframework.samples.petclinic.views.welcome
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 
@@ -23,7 +27,12 @@ import org.springframework.web.bind.annotation.GetMapping
  */
 @Controller
 class WelcomeController {
-
     @GetMapping("/")
-    fun welcome(): String = "welcome"
+    fun welcome(): ResponseEntity<String> =
+        ResponseEntity
+            .ok()
+            .contentType(MediaType.TEXT_HTML)
+            .body(
+                layout { welcome() }.render(),
+            )
 }

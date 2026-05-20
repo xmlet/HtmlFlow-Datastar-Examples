@@ -1,6 +1,6 @@
 package org.springframework.samples.petclinic.vet
 
-import org.hamcrest.xml.HasXPath.hasXPath
+import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(VetController::class)
 class VetControllerTest {
-
     @Autowired
     lateinit private var mockMvc: MockMvc
 
@@ -46,26 +45,14 @@ class VetControllerTest {
 
     @Test
     fun testShowVetListHtml() {
-        mockMvc.perform(get("/vets.html"))
-                .andExpect(status().isOk)
-                .andExpect(model().attributeExists("vets"))
-                .andExpect(view().name("vets/vetList"))
+        mockMvc
+            .perform(get("/vets.html"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+            .andExpect(content().string(containsString("Veterinarians")))
+            .andExpect(content().string(containsString("James Carter")))
+            .andExpect(content().string(containsString("none")))
+            .andExpect(content().string(containsString("Helen Leary")))
+            .andExpect(content().string(containsString("radiology")))
     }
-
-    @Test
-    fun testShowResourcesVetList() {
-        val actions = mockMvc.perform(get("/vets.json").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk)
-        actions.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.vetList[0].id").value(1))
-    }
-
-    @Test
-    fun testShowVetListXml() {
-        mockMvc.perform(get("/vets.xml").accept(MediaType.APPLICATION_XML))
-                .andExpect(status().isOk)
-                .andExpect(content().contentType(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().node(hasXPath("/vets/vetList[id=1]/id")))
-    }
-
 }

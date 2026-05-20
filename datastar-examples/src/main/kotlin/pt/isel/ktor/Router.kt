@@ -24,4 +24,5 @@ fun Application.demosKtorRouting() =
         demoTodoMvc()
         demoProgressBar()
         demoClickToEdit()
+        demoSignalComplexDomain()
     }

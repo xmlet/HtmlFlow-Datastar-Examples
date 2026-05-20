@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.owner
+package org.springframework.samples.petclinic.pet
 
 
 import org.assertj.core.api.Assertions.assertThat
@@ -21,7 +21,6 @@ import java.util.*
 @ExtendWith(SpringExtension::class)
 @ExtendWith(MockitoExtension::class)
 class PetTypeFormatterTest {
-
     @Mock
     private lateinit var pets: PetRepository
 

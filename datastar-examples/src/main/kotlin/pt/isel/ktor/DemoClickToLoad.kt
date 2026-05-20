@@ -2,11 +2,11 @@ package pt.isel.ktor
 
 import dev.datastar.kotlin.sdk.ElementPatchMode
 import dev.datastar.kotlin.sdk.PatchElementsOptions
-import dev.datastar.kotlin.sdk.ServerSentEventGenerator
+import dev.datastar.kotlin.sdk.coroutines.ServerSentEventGenerator
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode.Companion.OK
+import io.ktor.server.response.respondBytesWriter
 import io.ktor.server.response.respondText
-import io.ktor.server.response.respondTextWriter
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.get
@@ -19,6 +19,7 @@ import pt.isel.utils.response
 import pt.isel.views.fragments.hfClickToLoadDescription
 import pt.isel.views.htmlflow.hfAgentRowView
 import pt.isel.views.htmlflow.hfClickToLoad
+import kotlin.time.Duration.Companion.milliseconds
 
 private val html = loadResource("public/html/click-to-load.html")
 
@@ -40,11 +41,11 @@ private suspend fun RoutingContext.getClickToLoadHtmlFlow() {
 }
 
 suspend fun RoutingContext.getMore() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {
-        delay(1000) // Simulate some delay
+        delay(1000.milliseconds) // Simulate some delay
         val generator = ServerSentEventGenerator(response(this))
         val datastarQueryArg = call.request.queryParameters["datastar"]
         requireNotNull(datastarQueryArg)
@@ -72,7 +73,7 @@ suspend fun RoutingContext.getMore() {
 }
 
 private suspend fun RoutingContext.getClickToLoadDescription() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {

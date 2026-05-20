@@ -1,11 +1,11 @@
 package pt.isel.ktor
 
-import dev.datastar.kotlin.sdk.ServerSentEventGenerator
+import dev.datastar.kotlin.sdk.coroutines.ServerSentEventGenerator
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.HttpStatusCode.Companion.OK
+import io.ktor.server.response.respondBytesWriter
 import io.ktor.server.response.respondText
-import io.ktor.server.response.respondTextWriter
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.get
@@ -46,7 +46,7 @@ private suspend fun RoutingContext.getCounterPageHtmlFlow() {
 }
 
 private suspend fun RoutingContext.getCounterEvents() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {
@@ -60,7 +60,7 @@ private suspend fun RoutingContext.getCounterEvents() {
 }
 
 private suspend fun RoutingContext.getCounterSignalsDescription() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = OK,
         contentType = ContentType.Text.EventStream,
     ) {

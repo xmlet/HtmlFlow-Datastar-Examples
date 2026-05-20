@@ -15,6 +15,9 @@
  */
 package org.springframework.samples.petclinic.vet
 
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
+import org.springframework.samples.petclinic.views.vets.VetList
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ResponseBody
@@ -27,27 +30,26 @@ import org.springframework.web.bind.annotation.ResponseBody
  * @author Antoine Rey
  */
 @Controller
-class VetController(val vetRepository: VetRepository) {
+class VetController(
+    val vetRepository: VetRepository,
+) {
+    val vetList = VetList()
 
     @GetMapping("/vets.html")
-    fun showHtmlVetList(model: MutableMap<String, Any>): String {
+    fun showHtmlVetList(model: MutableMap<String, Any>): ResponseEntity<String> {
         val vets = Vets(vetRepository.findAll())
-        model.put("vets", vets)
-        return "vets/vetList"
+        model["vets"] = vets
+        return ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(vetList.view.render(vets))
     }
 
     @GetMapping("vets.json", produces = ["application/json"])
     @ResponseBody
     fun showJsonVetList(): Vets =
-            // Here we are returning an object of type 'Vets' rather than a collection of Vet
-            // objects so it is simpler for Json/Object mapping
-            Vets(vetRepository.findAll())
-
+        // Here we are returning an object of type 'Vets' rather than a collection of Vet
+        // objects so it is simpler for Json/Object mapping
+        Vets(vetRepository.findAll())
 
     @GetMapping("vets.xml")
     @ResponseBody
-    fun showXmlVetList(): Vets =
-            Vets(vetRepository.findAll())
-
-
+    fun showXmlVetList(): Vets = Vets(vetRepository.findAll())
 }

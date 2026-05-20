@@ -10,6 +10,7 @@ plugins {
     id("com.google.cloud.tools.jib") version "3.5.3"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
+    kotlin("plugin.serialization") version kotlinVersion
 }
 
 val boostrapVersion = "5.3.8"
@@ -18,7 +19,7 @@ val webjarsLocatorLiteVersion = "1.1.2"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -57,13 +58,27 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("org.junit.jupiter:junit-jupiter-params")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+
+    // Playwright for end-to-end testing
+    testImplementation("com.microsoft.playwright:playwright:1.48.0")
 
     runtimeOnly("com.h2database:h2")
     runtimeOnly("com.mysql:mysql-connector-j")
-    runtimeOnly("org.webjars:webjars-locator-lite:${webjarsLocatorLiteVersion}")
+    runtimeOnly("org.webjars:webjars-locator-lite:$webjarsLocatorLiteVersion")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+    // HtmlFlow Datastar dependency
+    implementation("com.github.xmlet:htmlflow-datastar-core:1.1.0-alpha.1")
+
+    // kotlinx.serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")
+
+    // Datastar SDK dependency
+    implementation("dev.data-star.kotlin:kotlin-sdk:1.0.0-RC5")
+    testImplementation(kotlin("test"))
 }
 
 jib {
@@ -72,4 +87,3 @@ jib {
         tags = setOf(project.version.toString(), "latest")
     }
 }
-

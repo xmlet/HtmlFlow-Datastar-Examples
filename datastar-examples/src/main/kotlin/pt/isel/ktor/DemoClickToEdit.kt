@@ -1,11 +1,11 @@
 package pt.isel.ktor
 
-import dev.datastar.kotlin.sdk.ServerSentEventGenerator
+import dev.datastar.kotlin.sdk.coroutines.ServerSentEventGenerator
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.request.receiveText
+import io.ktor.server.response.respondBytesWriter
 import io.ktor.server.response.respondText
-import io.ktor.server.response.respondTextWriter
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.get
@@ -56,7 +56,7 @@ private suspend fun RoutingContext.getClickToEditHtmlFlow() {
 }
 
 private suspend fun RoutingContext.editClickToEdit() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = HttpStatusCode.OK,
         contentType = ContentType.Text.EventStream,
     ) {
@@ -66,7 +66,7 @@ private suspend fun RoutingContext.editClickToEdit() {
 }
 
 private suspend fun RoutingContext.resetClickToEdit() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = HttpStatusCode.OK,
         contentType = ContentType.Text.EventStream,
     ) {
@@ -79,7 +79,7 @@ private suspend fun RoutingContext.resetClickToEdit() {
 }
 
 private suspend fun RoutingContext.cancelClickToEdit() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = HttpStatusCode.OK,
         contentType = ContentType.Text.EventStream,
     ) {
@@ -90,7 +90,7 @@ private suspend fun RoutingContext.cancelClickToEdit() {
 }
 
 private suspend fun RoutingContext.saveClickToEdit() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = HttpStatusCode.OK,
         contentType = ContentType.Text.EventStream,
     ) {
@@ -112,7 +112,7 @@ private suspend fun RoutingContext.saveClickToEdit() {
 }
 
 private suspend fun RoutingContext.getClickToEditDescription() {
-    call.respondTextWriter(
+    call.respondBytesWriter(
         status = HttpStatusCode.OK,
         contentType = ContentType.Text.EventStream,
     ) {

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script type="module" src="/js/datastar.js"></script>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div data-signals="{person: {name: 'John', age: 18}}">
+        <p>Name: <span data-text="$person.name"></span></p>
+        <p>Age: <span data-text="$person.age"></span></p>
+        <button data-on:click="@put('/complex-domain/increase-age')">Increase Age</button>
+        <button data-on:click="@put('/complex-domain/switch-user')">Switch User</button>
+    </div>
+</body>
+</html>

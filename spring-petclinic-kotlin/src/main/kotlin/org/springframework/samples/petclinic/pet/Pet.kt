@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.samples.petclinic.owner
+package org.springframework.samples.petclinic.pet
 
-
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.samples.petclinic.model.NamedEntity
+import org.springframework.samples.petclinic.owner.Owner
 import org.springframework.samples.petclinic.visit.Visit
 import java.time.LocalDate
-import java.util.*
-import jakarta.persistence.*
 
 /**
  * Simple business object representing a owner.
@@ -34,7 +37,6 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "pets")
 class Pet : NamedEntity() {
-
     @Column(name = "birth_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     var birthDate: LocalDate? = null
@@ -50,13 +52,10 @@ class Pet : NamedEntity() {
     @Transient
     var visits: MutableSet<Visit> = LinkedHashSet()
 
-
-    fun getVisits(): List<Visit> =
-            visits.sortedWith(compareBy { it.date })
+    fun getVisits(): List<Visit> = visits.sortedWith(compareBy { it.date })
 
     fun addVisit(visit: Visit) {
         visits.add(visit)
         visit.petId = this.id
     }
-
 }
