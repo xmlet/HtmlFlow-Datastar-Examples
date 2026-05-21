@@ -49,6 +49,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
  * @author Antoine Rey
  *
  * @author Paulo Carvalho
+ * @author Leonel Correia
  */
 
 @Controller
@@ -86,7 +87,7 @@ class PetController(
                 ownersDetails.petAddView.render(owner),
                 PatchElementsOptions(
                     selector = "#pets-table-body",
-                    mode = ElementPatchMode.Append,
+                    mode = ElementPatchMode.Prepend,
                 ),
             )
             stream.flush()
@@ -108,8 +109,16 @@ class PetController(
             if (!errors.hasErrors()) {
                 owner.addPet(pet)
                 pets.save(pet)
+                val newOwner = owners.findById(owner.id!!)
+                val newPet = newOwner.pets.find { it.name == pet.name && it.birthDate == pet.birthDate }
                 generator.patchSignals(resetPetSignals("New"))
-                generator.patchElements(ownersDetails.defaultPetsTableView.render(owner))
+                generator.patchElements(
+                    ownersDetails.petRow.render(newPet),
+                    PatchElementsOptions(
+                        selector = "#pets-add",
+                        mode = ElementPatchMode.Replace,
+                    ),
+                )
             }
             stream.flush()
         }
