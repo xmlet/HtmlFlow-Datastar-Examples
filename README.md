@@ -184,7 +184,7 @@ HtmlFlow + DataStar (server-driven)
 
 ```kotlin
 h2 { text("Find Owners") }
-val lastName = dataSignal("last-name")
+val lastName = dataSignal("lastName")
 dataText { +" Searching for users with last name $lastName " }
 input {
   dataBind(lastName)
