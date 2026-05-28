@@ -30,7 +30,7 @@ class FindOwnersActiveSearchE2eTest {
 
             try {
                 // Navigate to the find owners page
-                val url = "http://localhost:$port/owners/find"
+                val url = "http://localhost:$port/owners"
                 val response = page.navigate(url)
                 assertEquals(200, response?.status(), "Navigation to $url should return 200")
 
@@ -39,7 +39,7 @@ class FindOwnersActiveSearchE2eTest {
                 page.waitForSelector("table")
 
                 // Count initial rows
-                val initialRowCount = page.querySelectorAll("tbody#owners-table tr").size
+                val initialRowCount = page.querySelectorAll("tbody#results-table tr").size
                 assertTrue(initialRowCount > 0, "Should have at least one owner in the table")
 
                 // Type "Franklin" into the search input to find specific owner
@@ -47,27 +47,25 @@ class FindOwnersActiveSearchE2eTest {
                 searchInput?.fill("Franklin")
 
                 // Wait for the table to update with filtered results
-                page.waitForFunction("document.querySelectorAll('tbody#owners-table tr').length === 1")
+                page.waitForFunction("document.querySelectorAll('tbody#results-table tr').length === 1")
 
-                val filteredRowCount = page.querySelectorAll("tbody#owners-table tr").size
+                val filteredRowCount = page.querySelectorAll("tbody#results-table tr").size
                 assertEquals(1, filteredRowCount, "Table should have 1 row after searching for Franklin")
 
                 // Verify the content of the filtered row
-                val row = page.querySelectorAll("tbody#owners-table tr").firstOrNull()
+                val row = page.querySelectorAll("tbody#results-table tr").firstOrNull()
                 assert(row != null) { "Row should exist" }
 
                 val cells = row?.querySelectorAll("td")
-                val firstName = cells?.get(0)?.textContent()?.trim() ?: ""
-                val lastName = cells?.get(1)?.textContent()?.trim() ?: ""
+                val name = cells?.get(0)?.textContent()?.trim() ?: ""
 
-                assertEquals("George", firstName, "Filtered row should have first name 'George'")
-                assertEquals("Franklin", lastName, "Filtered row should have last name 'Franklin'")
+                assertEquals("George Franklin", name, "Filtered row should have name 'George Franklin'")
 
                 // Clear the search input
                 searchInput?.fill("")
-                page.waitForFunction("document.querySelectorAll('tbody#owners-table tr').length > 1")
+                page.waitForFunction("document.querySelectorAll('tbody#results-table tr').length > 1")
 
-                val resetRowCount = page.querySelectorAll("tbody#owners-table tr").size
+                val resetRowCount = page.querySelectorAll("tbody#results-table tr").size
                 assertEquals(initialRowCount, resetRowCount, "Table should be reset after clearing search")
             } finally {
                 page.close()
@@ -91,7 +89,7 @@ class FindOwnersActiveSearchE2eTest {
 
             try {
                 // Navigate to the find owners page
-                val url = "http://localhost:$port/owners/find"
+                val url = "http://localhost:$port/owners"
                 val response = page.navigate(url)
                 assertEquals(200, response?.status(), "Navigation to $url should return 200")
 
@@ -106,7 +104,7 @@ class FindOwnersActiveSearchE2eTest {
                 // Wait a bit for any updates
                 page.waitForTimeout(300.0)
 
-                val allOwnersCount = page.querySelectorAll("tbody#owners-table tr").size
+                val allOwnersCount = page.querySelectorAll("tbody#results-table tr").size
                 assertEquals(10, allOwnersCount, "Should have 10 total owners in database")
             } finally {
                 page.close()
@@ -130,7 +128,7 @@ class FindOwnersActiveSearchE2eTest {
 
             try {
                 // Navigate to the find owners page
-                val url = "http://localhost:$port/owners/find"
+                val url = "http://localhost:$port/owners"
                 val response = page.navigate(url)
                 assertEquals(200, response?.status(), "Navigation to $url should return 200")
 
@@ -143,9 +141,9 @@ class FindOwnersActiveSearchE2eTest {
                 searchInput?.fill("NonExistentOwner")
 
                 // Wait for the table to update
-                page.waitForFunction("document.querySelectorAll('tbody#owners-table tr').length === 0")
+                page.waitForFunction("document.querySelectorAll('tbody#results-table tr').length === 0")
 
-                val filteredRowCount = page.querySelectorAll("tbody#owners-table tr").size
+                val filteredRowCount = page.querySelectorAll("tbody#results-table tr").size
                 assertEquals(0, filteredRowCount, "Table should have no rows when searching for non-existent owner")
             } finally {
                 page.close()

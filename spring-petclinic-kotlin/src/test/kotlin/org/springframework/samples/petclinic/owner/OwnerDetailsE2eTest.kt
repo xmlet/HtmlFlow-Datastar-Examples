@@ -83,12 +83,6 @@ class OwnerDetailsE2eTest {
                 // Wait a bit for the page to update
                 page.waitForTimeout(500.0)
 
-                // Log the page content to debug
-                val pageContentAfterClick = page.content()
-                println("=== PAGE CONTENT AFTER CLICKING EDIT ===")
-                println(pageContentAfterClick)
-                println("=== END PAGE CONTENT ===")
-
                 // Wait for the edit form to appear with input fields (using data-bind: attributes)
                 page.waitForSelector("input[data-bind\\:first-name]")
                 page.waitForSelector("input[data-bind\\:last-name]")
@@ -156,12 +150,6 @@ class OwnerDetailsE2eTest {
 
                 // Wait a bit for the page to update
                 page.waitForTimeout(500.0)
-
-                // Log the page content to debug
-                val pageContentAfterClickCancel = page.content()
-                println("=== PAGE CONTENT AFTER CLICKING EDIT (CANCEL TEST) ===")
-                println(pageContentAfterClickCancel)
-                println("=== END PAGE CONTENT ===")
 
                 // Wait for the edit form to appear (using data-bind: attributes)
                 page.waitForSelector("input[data-bind\\:first-name]")

@@ -43,12 +43,6 @@ class PetEditE2eTest {
                 // Wait a bit for the form to appear
                 page.waitForTimeout(500.0)
 
-                // Log the page content for debugging
-                val pageContent = page.content()
-                println("=== PAGE CONTENT AFTER CLICKING EDIT PET ===")
-                println(pageContent)
-                println("=== END PAGE CONTENT ===")
-
                 // The edit form should now be displayed (check for edit buttons)
                 val saveEditButton = page.querySelector("button#save-edit-pet")
                 val cancelEditButton = page.querySelector("button#cancel-pet")

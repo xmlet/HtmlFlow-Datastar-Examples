@@ -19,7 +19,6 @@ import org.springframework.samples.petclinic.pet.PetType
 import org.springframework.samples.petclinic.views.owners.OwnersCreate
 import org.springframework.samples.petclinic.views.owners.OwnersDetails
 import org.springframework.samples.petclinic.views.owners.OwnersFind
-import org.springframework.samples.petclinic.views.owners.OwnersList
 import org.springframework.samples.petclinic.visit.Visit
 import org.springframework.samples.petclinic.visit.VisitRepository
 import org.springframework.test.context.bean.override.mockito.MockitoBean
@@ -38,7 +37,7 @@ import java.time.LocalDate
  */
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(OwnerController::class)
-@Import(OwnersDetails::class, OwnersFind::class, OwnersList::class, OwnersCreate::class)
+@Import(OwnersDetails::class, OwnersFind::class, OwnersCreate::class)
 class OwnerControllerTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -57,9 +56,6 @@ class OwnerControllerTest {
 
     @Autowired
     private lateinit var ownersFind: OwnersFind
-
-    @Autowired
-    private lateinit var ownersList: OwnersList
 
     @Autowired
     private lateinit var ownersCreate: OwnersCreate
@@ -222,32 +218,32 @@ class OwnerControllerTest {
     }
 
     @Test
-    fun testInitFindForm() {
+    fun testInitFind() {
         mockMvc
-            .perform(get(Routes.OWNERS_FIND))
+            .perform(get(Routes.OWNERS))
             .andExpect(status().isOk)
             .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
             .andExpect(content().string(containsString("Find Owners")))
             .andExpect(
                 content()
-                    .string(containsString("<form class=\"form-horizontal\" id=\"search-owner-form\" action=\"/owners\" method=\"get\">")),
-            ).andExpect(content().string(containsString("<label class=\"col-sm-2 control-label\">")))
-            .andExpect(content().string(containsString("<input class=\"fom\" type=\"text\" name=\"lastName\"")))
-            .andExpect(content().string(containsString("First Name")))
-            .andExpect(content().string(containsString("Last Name")))
-            .andExpect(content().string(containsString("Pets")))
-            .andExpect(content().string(containsString("<tbody id=\"owners-table\">")))
-            .andExpect(
-                content()
                     .string(
                         containsString(
-                            "<tr onclick=\"window.location='/owners/1'\" style=\"cursor: pointer;\" onmouseover=\"this.style.backgroundColor='#f5f5f5'\" onmouseout=\"this.style.backgroundColor='' \">",
+                            "<input class=\"fom\" type=\"text\" name=\"lastName\" placeholder=\"Find Owners\" data-bind:last-name=\"\" data-on:input__debounce.200ms=\"@get('/owners/find/result')\">",
                         ),
                     ),
-            ).andExpect(content().string(containsString("George")))
-            .andExpect(content().string(containsString("Franklin")))
-            .andExpect(content().string(containsString("[Max]")))
-            .andExpect(content().string(containsString("Find Owner")))
+            ).andExpect(content().string(containsString("<table id=\"owners\" class=\"table table-striped\">")))
+            .andExpect(content().string(containsString("Name")))
+            .andExpect(content().string(containsString("Address")))
+            .andExpect(content().string(containsString("City")))
+            .andExpect(content().string(containsString("Telephone")))
+            .andExpect(content().string(containsString("Pets")))
+            .andExpect(content().string(containsString("<tbody id=\"results-table\">")))
+            .andExpect(content().string(containsString("<a href=\"/owners/1\">")))
+            .andExpect(content().string(containsString("George Franklin")))
+            .andExpect(content().string(containsString("110 W. Liberty St.")))
+            .andExpect(content().string(containsString("Madison")))
+            .andExpect(content().string(containsString("6085551023")))
+            .andExpect(content().string(containsString("Max")))
             .andExpect(content().string(containsString("<a class=\"btn btn-primary\" href=\"/owners/new\">")))
             .andExpect(content().string(containsString("Add Owner")))
     }
@@ -275,49 +271,6 @@ class OwnerControllerTest {
     }
 
     @Test
-    fun testProcessFindFormByLastNameOneResult() {
-        given(owners.findByLastName(george.lastName)).willReturn(Lists.newArrayList(george))
-        mockMvc
-            .perform(
-                get(Routes.OWNERS)
-                    .param("lastName", "Franklin"),
-            ).andExpect(status().is3xxRedirection)
-    }
-
-    @Test
-    fun testProcessFindFormNoOwnersFound() {
-        mockMvc
-            .perform(
-                get(Routes.OWNERS)
-                    .param("lastName", "Unknown Surname"),
-            ).andExpect(status().isOk)
-            .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-            .andExpect(content().string(containsString("Owners")))
-            .andExpect(
-                content()
-                    .string(containsString("<form class=\"form-horizontal\" id=\"search-owner-form\" action=\"/owners\" method=\"get\">")),
-            ).andExpect(content().string(containsString("<label class=\"col-sm-2 control-label\">")))
-            .andExpect(content().string(containsString("<input class=\"fom\" type=\"text\" name=\"lastName\"")))
-            .andExpect(content().string(containsString("First Name")))
-            .andExpect(content().string(containsString("Last Name")))
-            .andExpect(content().string(containsString("Pets")))
-            .andExpect(content().string(containsString("<tbody id=\"owners-table\">")))
-            .andExpect(
-                content()
-                    .string(
-                        not(
-                            containsString(
-                                "<tr onclick=\"window.location='/owners/1'\" style=\"cursor: pointer;\" onmouseover=\"this.style.backgroundColor='#f5f5f5'\" onmouseout=\"this.style.backgroundColor='' \">",
-                            ),
-                        ),
-                    ),
-            ).andExpect(content().string(not(containsString("George"))))
-            .andExpect(content().string(containsString("Find Owner")))
-            .andExpect(content().string(containsString("<a class=\"btn btn-primary\" href=\"/owners/new\">")))
-            .andExpect(content().string(containsString("Add Owner")))
-    }
-
-    @Test
     fun testShowOwner() {
         given(owners.findById(TEST_OWNER_ID)).willReturn(george)
         mockMvc
@@ -337,7 +290,7 @@ class OwnerControllerTest {
                 content()
                     .string(
                         containsString(
-                            "<button data-attr:disabled=\"\$_editing\" data-on:click=\"\$_editing = true; @get('/owners/${george.id}/edit')\" class=\"btn btn-primary\">",
+                            $$"<button data-attr:disabled=\"$_editing\" data-on:click=\"$_editing = true; @get('/owners/$${george.id}/edit')\" class=\"btn btn-primary\">",
                         ),
                     ),
             ).andExpect(content().string(containsString("Edit Owner")))
@@ -345,7 +298,7 @@ class OwnerControllerTest {
                 content()
                     .string(
                         containsString(
-                            "data-on:click=\"\$_editing = true; @get('/owners/1/pets/new')\"",
+                            $$"data-on:click=\"$_editing = true; @get('/owners/1/pets/new')\"",
                         ),
                     ),
             ).andExpect(content().string(containsString("Add New Pet")))
@@ -372,7 +325,7 @@ class OwnerControllerTest {
                 content()
                     .string(
                         containsString(
-                            "<button id=\"pet-edit\" class=\"btn btn-primary\" data-on:click=\"\$_editing = true; @get('/owners/${george.id}/pets/${george.pets.first().id}/edit')\" data-indicator:_fetching=\"\" data-attr:disabled=\"\$_fetching || \$_editing\">",
+                            $$"<button id=\"pet-edit\" class=\"btn btn-primary\" data-on:click=\"$_editing = true; @get('/owners/$${george.id}/pets/$${george.pets.first().id}/edit')\" data-indicator:_fetching=\"\" data-attr:disabled=\"$_fetching || $_editing\">",
                         ),
                     ),
             ).andExpect(
