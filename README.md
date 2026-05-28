@@ -184,10 +184,12 @@ HtmlFlow + DataStar (server-driven)
 
 ```kotlin
 h2 { text("Find Owners") }
+val lastName = dataSignal("last-name")
+dataText { +" Searching for users with last name $lastName " }
 input {
-  dataBind("last-name")
+  dataBind(lastName)
   dataOn(Input) {
-    get(Routes.OWNERS_FIND_RESULT)
+    get(::searchhOwners)
     modifiers { debounce(200.milliseconds) }
   }
 }
@@ -195,7 +197,7 @@ table {
   tableHead()
   tbody { tableBody() }
 }
-a { attrHref(Routes.OWNERS_NEW); text("Add Owner") }
+a { attrHref("/owners/new"); text("Add Owner") }
 ```
 
 Why use this approach?
