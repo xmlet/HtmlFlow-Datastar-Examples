@@ -67,7 +67,7 @@ val hfEditRow: HtmlView<List<TableUser>> =
 
 fun Div<*>.hfEditRowTable() {
     attrId("demo")
-    val editing = dataSignal("_editing", false).also { editing = it as Signal<Boolean> }
+    val editing = dataSignal("_editing", false).also { editing = it }
     table {
         thead {
             tr {
