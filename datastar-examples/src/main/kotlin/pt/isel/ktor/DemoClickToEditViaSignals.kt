@@ -52,10 +52,6 @@ private suspend fun RoutingContext.getClickToEditEvents() {
         contentType = ContentType.Text.EventStream,
     ) {
         val generator = ServerSentEventGenerator(response(this))
-        val currentSignals = clickToEditSignals.value
-        generator.patchSignals(
-            " { firstName: '${currentSignals.firstName}', lastName: '${currentSignals.lastName}' , email: '${currentSignals.email}' }",
-        )
         clickToEditSignals.collect { newSignals ->
             generator.patchSignals(
                 " { firstName: '${newSignals.firstName}', lastName: '${newSignals.lastName}' , email: '${newSignals.email}' }",

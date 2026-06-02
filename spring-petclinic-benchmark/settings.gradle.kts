@@ -13,5 +13,4 @@ plugins {
 rootProject.name = "spring-petclinic-benchmark"
 include("benchmark")
 include("petclinic-thymeleaf")
-include("petclinic-react")
 include("petclinic-htmlflow-datastar")
