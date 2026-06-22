@@ -84,18 +84,18 @@ class OwnerDetailsE2eTest {
                 page.waitForTimeout(500.0)
 
                 // Wait for the edit form to appear with input fields (using data-bind: attributes)
-                page.waitForSelector("input[data-bind\\:first-name]")
-                page.waitForSelector("input[data-bind\\:last-name]")
-                page.waitForSelector("input[data-bind\\:address]")
-                page.waitForSelector("input[data-bind\\:city]")
-                page.waitForSelector("input[data-bind\\:telephone]")
+                page.waitForSelector("input[data-bind='firstName']")
+                page.waitForSelector("input[data-bind='lastName']")
+                page.waitForSelector("input[data-bind='address']")
+                page.waitForSelector("input[data-bind='city']")
+                page.waitForSelector("input[data-bind='telephone']")
 
                 // Get the current values
-                val firstNameInput = page.locator("input[data-bind\\:first-name]")
-                val lastNameInput = page.locator("input[data-bind\\:last-name]")
-                val addressInput = page.locator("input[data-bind\\:address]")
-                val cityInput = page.locator("input[data-bind\\:city]")
-                val telephoneInput = page.locator("input[data-bind\\:telephone]")
+                val firstNameInput = page.locator("input[data-bind='firstName']")
+                val lastNameInput = page.locator("input[data-bind='lastName']")
+                val addressInput = page.locator("input[data-bind='address']")
+                val cityInput = page.locator("input[data-bind='city']")
+                val telephoneInput = page.locator("input[data-bind='telephone']")
 
                 // Modify the owner information
                 firstNameInput.fill("George2")
@@ -108,7 +108,7 @@ class OwnerDetailsE2eTest {
                 page.locator("#save-owner").click()
 
                 // Wait for the form to be saved and update
-                page.waitForFunction("!document.querySelector('input[data-bind\\\\:first-name]')")
+                page.waitForFunction("!document.querySelector('input[data-bind=\"firstName\"]')")
 
                 // Verify updated details are displayed
                 val pageText = page.content()
@@ -152,22 +152,22 @@ class OwnerDetailsE2eTest {
                 page.waitForTimeout(500.0)
 
                 // Wait for the edit form to appear (using data-bind: attributes)
-                page.waitForSelector("input[data-bind\\:first-name]")
+                page.waitForSelector("input[data-bind='firstName']")
 
                 // Get original values
-                val firstNameInput = page.locator("input[data-bind\\:first-name]")
+                val firstNameInput = page.locator("input[data-bind='firstName']")
                 val originalFirstName = firstNameInput.inputValue()
 
                 // Modify the owner information
                 firstNameInput.fill("ModifiedName")
-                page.locator("input[data-bind\\:last-name]").fill("ModifiedLastName")
+                page.locator("input[data-bind='lastName']").fill("ModifiedLastName")
 
                 // Click the Cancel button
                 page.locator("#cancel-edit").click()
 
                 // Wait for the form to be hidden
                 page.waitForSelector(
-                    "input[data-bind\\:first-name]",
+                    "input[data-bind='firstName']",
                     com.microsoft.playwright.Page
                         .WaitForSelectorOptions()
                         .setState(WaitForSelectorState.HIDDEN),

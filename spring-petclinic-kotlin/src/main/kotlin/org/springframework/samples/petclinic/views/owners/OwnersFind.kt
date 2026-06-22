@@ -55,7 +55,7 @@ class OwnersFind {
             attrType(EnumTypeInputType.TEXT)
             attrName("lastName")
             attrPlaceholder("Find Owners")
-            dataBind("last-name")
+            dataBind("lastName")
             dataOn(Input) {
                 get(Routes.OWNERS_FIND_RESULT)
                 modifiers { debounce(200.milliseconds) }

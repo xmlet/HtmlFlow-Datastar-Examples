@@ -94,11 +94,11 @@ class OwnerFormValidationE2eTest {
                 page.locator("button:has-text('Edit Owner')").click()
 
                 // Wait for the edit form to appear (using data-bind: attributes)
-                page.waitForSelector("input[data-bind\\:first-name]")
-                page.waitForSelector("input[data-bind\\:telephone]")
+                page.waitForSelector("input[data-bind='firstName']")
+                page.waitForSelector("input[data-bind='telephone']")
 
                 // Clear and set invalid telephone (more than 10 digits)
-                val telephoneInput = page.locator("input[data-bind\\:telephone]")
+                val telephoneInput = page.locator("input[data-bind='telephone']")
                 telephoneInput.fill("12345678901")
 
                 // Click the Save button
@@ -117,7 +117,7 @@ class OwnerFormValidationE2eTest {
                 }
 
                 // Verify the edit form is still visible (not saved)
-                val editForm = page.querySelector("input[data-bind\\:first-name]")
+                val editForm = page.querySelector("input[data-bind='firstName']")
                 assertNotNull(editForm, "Edit form should still be visible after validation error")
             } finally {
                 page.close()
@@ -152,18 +152,18 @@ class OwnerFormValidationE2eTest {
                 page.locator("button:has-text('Edit Owner')").click()
 
                 // Wait for the edit form to appear (using data-bind: attributes)
-                page.waitForSelector("input[data-bind\\:first-name]")
-                page.waitForSelector("input[data-bind\\:telephone]")
+                page.waitForSelector("input[data-bind='firstName']")
+                page.waitForSelector("input[data-bind='telephone']")
 
                 // Set valid telephone (exactly 10 digits or less)
-                val telephoneInput = page.locator("input[data-bind\\:telephone]")
+                val telephoneInput = page.locator("input[data-bind='telephone']")
                 telephoneInput.fill("5551234567")
 
                 // Click the Save button
                 page.locator("#save-owner").click()
 
                 // Wait for the form to disappear (successful save)
-                page.waitForFunction("!document.querySelector('input[data-bind\\\\:first-name]')")
+                page.waitForFunction("!document.querySelector('input[data-bind=firstName]')")
 
                 // Verify no error message is displayed
                 val errorDiv = page.querySelector("div.error")
@@ -171,7 +171,7 @@ class OwnerFormValidationE2eTest {
 
                 // Verify we're back to the display view
                 val pageText = page.content()
-                assert(!pageText.contains("input[data-bind\\:first-name")) { "Edit form should be hidden after save" }
+                assert(!pageText.contains("input[data-bind='firstName']")) { "Edit form should be hidden after save" }
             } finally {
                 page.close()
                 context.close()

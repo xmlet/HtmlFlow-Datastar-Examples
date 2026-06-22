@@ -43,7 +43,7 @@ class PetAddE2eTest {
                 page.waitForTimeout(500.0)
 
                 // Wait for the pet add form to appear with input fields
-                page.waitForSelector("input[data-bind\\:name-new]")
+                page.waitForSelector("input[data-bind='nameNew']")
 
                 // Verify that action buttons are disabled while form is open
                 val editPetButton = page.locator("button:has-text('Edit Pet')")
@@ -96,7 +96,7 @@ class PetAddE2eTest {
                 page.locator("button:has-text('Add New Pet')").click()
 
                 // Wait for the form to appear
-                page.waitForSelector("input[data-bind\\:name-new]")
+                page.waitForSelector("input[data-bind='nameNew']")
 
                 // Verify that action buttons are disabled while form is open
                 val editPetButton = page.locator("button:has-text('Edit Pet')")
@@ -108,9 +108,9 @@ class PetAddE2eTest {
                 assert(addNewPetButton.isDisabled) { "Add New Pet button should be disabled while form is open" }
 
                 // Fill in the pet form
-                val nameInput = page.locator("input[data-bind\\:name-new]")
-                val birthDateInput = page.locator("input[data-bind\\:birth-date-new]")
-                val typeSelect = page.locator("select[data-bind\\:type-new]")
+                val nameInput = page.locator("input[data-bind='nameNew']")
+                val birthDateInput = page.locator("input[data-bind='birthDateNew']")
+                val typeSelect = page.locator("select[data-bind='typeNew']")
 
                 nameInput.fill("TestPet")
                 birthDateInput.fill("2020-01-15")
@@ -120,7 +120,7 @@ class PetAddE2eTest {
                 page.locator("button#save-pet").click()
 
                 // Wait for the form to be removed
-                page.waitForFunction("!document.querySelector('input[data-bind\\\\:-new]')")
+                page.waitForFunction("!document.querySelector('input[data-bind=\"typeNew\"]')")
 
                 // Wait a bit for the page to update
                 page.waitForTimeout(300.0)
@@ -168,7 +168,7 @@ class PetAddE2eTest {
                 page.locator("button:has-text('Add New Pet')").click()
 
                 // Wait for the form to appear
-                page.waitForSelector("input[data-bind\\:name-new]")
+                page.waitForSelector("input[data-bind='nameNew']")
 
                 // Verify that action buttons are disabled while form is open
                 val editPetButton = page.locator("button:has-text('Edit Pet')")
@@ -180,14 +180,14 @@ class PetAddE2eTest {
                 assert(addNewPetButton.isDisabled) { "Add New Pet button should be disabled while form is open" }
 
                 // Fill in the pet form
-                val nameInput = page.locator("input[data-bind\\:name-new]")
+                val nameInput = page.locator("input[data-bind='nameNew']")
                 nameInput.fill("TestPet")
 
                 // Click the Cancel Pet button
                 page.locator("button#cancel-pet").click()
 
                 // Wait for the form to be removed
-                page.waitForFunction("!document.querySelector('input[data-bind\\\\:-new]')")
+                page.waitForFunction("!document.querySelector('input[data-bind=\"nameNew\"]')")
 
                 // Verify the pet was NOT added
                 val finalPetRows = page.querySelectorAll("tr[id^='row-pet-']").size
@@ -200,4 +200,3 @@ class PetAddE2eTest {
         }
     }
 }
-
