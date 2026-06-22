@@ -89,8 +89,8 @@ class PetEditE2eTest {
                 page.waitForTimeout(500.0)
 
                 // Find the input fields using the pet ID as suffix
-                val nameInput = page.locator("input[data-bind\\:name$petId]")
-                val birthDateInput = page.locator("input[data-bind\\:birth-date$petId]")
+                val nameInput = page.locator("input[data-bind='name$petId']")
+                val birthDateInput = page.locator("input[data-bind='birthDate$petId']")
 
                 // Modify the pet information
                 nameInput.fill("UpdatedPetName")
@@ -100,7 +100,7 @@ class PetEditE2eTest {
                 page.locator("button#save-edit-pet").click()
 
                 // Wait for the form to be saved
-                page.waitForFunction("!document.querySelector('input[data-bind\\\\:name$petId]')")
+                page.waitForFunction("!document.querySelector('input[data-bind=\"name$petId\"]')")
 
                 // Wait a bit for the page to update
                 page.waitForTimeout(300.0)
@@ -150,7 +150,7 @@ class PetEditE2eTest {
                 page.waitForTimeout(500.0)
 
                 // Find the input fields using the pet ID as suffix
-                val nameInput = page.locator("input[data-bind\\:name$petId]")
+                val nameInput = page.locator("input[data-bind='name$petId']")
 
                 // Store the original value
                 val originalName = nameInput.inputValue()
@@ -163,7 +163,7 @@ class PetEditE2eTest {
 
                 // Wait for the form to be hidden
                 page.waitForSelector(
-                    "input[data-bind\\:name$petId]",
+                    "input[data-bind='name$petId']",
                     com.microsoft.playwright.Page
                         .WaitForSelectorOptions()
                         .setState(WaitForSelectorState.HIDDEN),
@@ -184,4 +184,3 @@ class PetEditE2eTest {
         }
     }
 }
-

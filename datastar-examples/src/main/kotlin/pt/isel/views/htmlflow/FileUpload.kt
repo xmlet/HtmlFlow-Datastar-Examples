@@ -50,7 +50,7 @@ val hfFileUpload: String =
                         }
                     }
                     body {
-                        val files = dataSignal("files")
+                        val files = dataSignal("files", "")
                         div {
                             attrId("description")
                             dataInit { get(::getFileUploadDescription) }

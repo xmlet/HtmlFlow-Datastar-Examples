@@ -32,12 +32,12 @@ import org.xmlet.htmlapifaster.tbody
 import org.xmlet.htmlapifaster.td
 import org.xmlet.htmlapifaster.th
 import org.xmlet.htmlapifaster.tr
-import org.xmlet.htmlflow.datastar.Signal
 import org.xmlet.htmlflow.datastar.attributes.dataAttr
 import org.xmlet.htmlflow.datastar.attributes.dataIndicator
 import org.xmlet.htmlflow.datastar.attributes.dataOn
 import org.xmlet.htmlflow.datastar.attributes.dataSignal
 import org.xmlet.htmlflow.datastar.events.Click
+import org.xmlet.htmlflow.datastar.expressions.Signal
 
 internal const val ERROR_MSG = "Either fields are empty or telephone number has other characters."
 
@@ -88,7 +88,7 @@ class OwnersDetails(
                 attrId("pets-add")
                 td {
                     addAttr("valign", "top")
-                    petsInputs(pets, "-new")
+                    petsInputs(pets, "New")
                 }
                 td {
                     addAttr("valign", "top")
@@ -135,7 +135,7 @@ class OwnersDetails(
         }
 
     private fun Div<*>.ownerDetails() {
-        val editing = dataSignal("_editing", false).also { editing = it }
+        val editing = dataSignal("_editing", false).also { editing = it as Signal<Boolean?> }
 
         h2 { text("Owner Information") }
 
@@ -148,7 +148,7 @@ class OwnersDetails(
         }
 
         editOwnerButton()
-        addNewPetButton(editing)
+        addNewPetButton(editing as Signal<Boolean?>)
 
         br {}
         br {}
@@ -219,9 +219,9 @@ class OwnersDetails(
     private fun Tbody<*>.ownerEditTable() {
         tr {
             th { text("First Name") }
-            rowElementInput("first-name")
+            rowElementInput("firstName")
             th { text("Last Name") }
-            rowElementInput("last-name")
+            rowElementInput("lastName")
         }
         tr {
             th { text("Address") }

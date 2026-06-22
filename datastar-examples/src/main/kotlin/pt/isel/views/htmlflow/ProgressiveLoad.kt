@@ -16,7 +16,6 @@ import org.xmlet.htmlapifaster.link
 import org.xmlet.htmlapifaster.p
 import org.xmlet.htmlapifaster.script
 import org.xmlet.htmlapifaster.section
-import org.xmlet.htmlflow.datastar.Signal
 import org.xmlet.htmlflow.datastar.attributes.dataAttr
 import org.xmlet.htmlflow.datastar.attributes.dataClass
 import org.xmlet.htmlflow.datastar.attributes.dataIndicator
@@ -24,6 +23,7 @@ import org.xmlet.htmlflow.datastar.attributes.dataInit
 import org.xmlet.htmlflow.datastar.attributes.dataOn
 import org.xmlet.htmlflow.datastar.attributes.dataSignal
 import org.xmlet.htmlflow.datastar.events.Click
+import org.xmlet.htmlflow.datastar.expressions.Signal
 import pt.isel.http4k.getProgressiveLoadDescription
 import pt.isel.http4k.getProgressiveLoadUpdates
 

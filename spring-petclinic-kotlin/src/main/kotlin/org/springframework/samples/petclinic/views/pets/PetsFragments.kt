@@ -23,12 +23,12 @@ import org.xmlet.htmlapifaster.select
 import org.xmlet.htmlapifaster.table
 import org.xmlet.htmlapifaster.td
 import org.xmlet.htmlapifaster.tr
-import org.xmlet.htmlflow.datastar.Signal
 import org.xmlet.htmlflow.datastar.attributes.dataAttr
 import org.xmlet.htmlflow.datastar.attributes.dataBind
 import org.xmlet.htmlflow.datastar.attributes.dataIndicator
 import org.xmlet.htmlflow.datastar.attributes.dataOn
 import org.xmlet.htmlflow.datastar.events.Click
+import org.xmlet.htmlflow.datastar.expressions.Signal
 
 // Used in OwnersDetails
 internal fun Div<*>.addNewPetButton(editing: Signal<Boolean?>) {
@@ -96,7 +96,7 @@ internal fun Td<*>.petsInputs(
         dt { text("Name") }
         dd { rowElementInputInline("name$signalSuffix") }
         dt { text("Birth Date") }
-        dd { rowElementInputInline("birth-date$signalSuffix", EnumTypeInputType.DATE) }
+        dd { rowElementInputInline("birthDate$signalSuffix", EnumTypeInputType.DATE) }
         dt { text("Type") }
         dd {
             select {

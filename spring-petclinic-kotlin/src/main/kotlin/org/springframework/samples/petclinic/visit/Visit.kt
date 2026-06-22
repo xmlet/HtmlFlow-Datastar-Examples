@@ -15,11 +15,11 @@
  */
 package org.springframework.samples.petclinic.visit
 
+import jakarta.persistence.*
+import jakarta.validation.constraints.NotEmpty
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.samples.petclinic.model.BaseEntity
 import java.time.LocalDate
-import jakarta.persistence.*
-import jakarta.validation.constraints.NotEmpty
 
 /**
  * Simple JavaBean domain object representing a visit.
@@ -31,7 +31,6 @@ import jakarta.validation.constraints.NotEmpty
 @Entity
 @Table(name = "visits")
 class Visit : BaseEntity() {
-
     /**
      * Holds value of property date.
      */
@@ -45,7 +44,6 @@ class Visit : BaseEntity() {
     @NotEmpty
     @Column(name = "description")
     var description: String? = null
-
 
     /**
      * Holds value of property owner.

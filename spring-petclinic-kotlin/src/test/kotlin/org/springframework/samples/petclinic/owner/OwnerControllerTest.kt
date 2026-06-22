@@ -101,42 +101,42 @@ class OwnerControllerTest {
                 content()
                     .string(
                         containsString(
-                            "div data-signals:first-name=\"\" data-signals:last-name=\"\" data-signals:address=\"\" data-signals:city=\"\" data-signals:telephone=\"\" class=\"form-group has-feedback\">",
+                            """div data-signals="{firstName: ""}" data-signals="{lastName: ""}" data-signals="{address: ""}" data-signals="{city: ""}" data-signals="{telephone: ""}" class="form-group has-feedback">""",
                         ),
                     ),
             ).andExpect(
                 content()
                     .string(
                         containsString(
-                            "<input class=\"form-control\" type=\"text\" id=\"firstName\" name=\"firstName\" data-bind:first-name=\"\" value=\"\">",
+                            "<input class=\"form-control\" type=\"text\" id=\"firstName\" name=\"firstName\" data-bind=\"firstName\" value=\"\">",
                         ),
                     ),
             ).andExpect(
                 content()
                     .string(
                         containsString(
-                            "<input class=\"form-control\" type=\"text\" id=\"lastName\" name=\"lastName\" data-bind:last-name=\"\" value=\"\">",
+                            "<input class=\"form-control\" type=\"text\" id=\"lastName\" name=\"lastName\" data-bind=\"lastName\" value=\"\">",
                         ),
                     ),
             ).andExpect(
                 content()
                     .string(
                         containsString(
-                            "<input class=\"form-control\" type=\"text\" id=\"address\" name=\"address\" data-bind:address=\"\" value=\"\">",
+                            "<input class=\"form-control\" type=\"text\" id=\"address\" name=\"address\" data-bind=\"address\" value=\"\">",
                         ),
                     ),
             ).andExpect(
                 content()
                     .string(
                         containsString(
-                            "<input class=\"form-control\" type=\"text\" id=\"city\" name=\"city\" data-bind:city=\"\" value=\"\">",
+                            "<input class=\"form-control\" type=\"text\" id=\"city\" name=\"city\" data-bind=\"city\" value=\"\">",
                         ),
                     ),
             ).andExpect(
                 content()
                     .string(
                         containsString(
-                            "<input class=\"form-control\" type=\"text\" id=\"telephone\" name=\"telephone\" data-bind:telephone=\"\" value=\"\">",
+                            "<input class=\"form-control\" type=\"text\" id=\"telephone\" name=\"telephone\" data-bind=\"telephone\" value=\"\">",
                         ),
                     ),
             )
@@ -169,42 +169,42 @@ class OwnerControllerTest {
                 content()
                     .string(
                         containsString(
-                            "div data-signals:first-name=\"\" data-signals:last-name=\"\" data-signals:address=\"\" data-signals:city=\"\" data-signals:telephone=\"\" class=\"form-group has-feedback\">",
+                            """div data-signals="{firstName: ""}" data-signals="{lastName: ""}" data-signals="{address: ""}" data-signals="{city: ""}" data-signals="{telephone: ""}" class="form-group has-feedback">""",
                         ),
                     ),
             ).andExpect(
                 content()
                     .string(
                         containsString(
-                            "<input class=\"form-control\" type=\"text\" id=\"firstName\" name=\"firstName\" data-bind:first-name=\"\" value=\"\">",
+                            "<input class=\"form-control\" type=\"text\" id=\"firstName\" name=\"firstName\" data-bind=\"firstName\" value=\"\">",
                         ),
                     ),
             ).andExpect(
                 content()
                     .string(
                         containsString(
-                            "<input class=\"form-control\" type=\"text\" id=\"lastName\" name=\"lastName\" data-bind:last-name=\"\" value=\"\">",
+                            "<input class=\"form-control\" type=\"text\" id=\"lastName\" name=\"lastName\" data-bind=\"lastName\" value=\"\">",
                         ),
                     ),
             ).andExpect(
                 content()
                     .string(
                         containsString(
-                            "<input class=\"form-control\" type=\"text\" id=\"address\" name=\"address\" data-bind:address=\"\" value=\"\">",
+                            "<input class=\"form-control\" type=\"text\" id=\"address\" name=\"address\" data-bind=\"address\" value=\"\">",
                         ),
                     ),
             ).andExpect(
                 content()
                     .string(
                         containsString(
-                            "<input class=\"form-control\" type=\"text\" id=\"city\" name=\"city\" data-bind:city=\"\" value=\"\">",
+                            "<input class=\"form-control\" type=\"text\" id=\"city\" name=\"city\" data-bind=\"city\" value=\"\">",
                         ),
                     ),
             ).andExpect(
                 content()
                     .string(
                         containsString(
-                            "<input class=\"form-control\" type=\"text\" id=\"telephone\" name=\"telephone\" data-bind:telephone=\"\" value=\"\">",
+                            "<input class=\"form-control\" type=\"text\" id=\"telephone\" name=\"telephone\" data-bind=\"telephone\" value=\"\">",
                         ),
                     ),
             ).andExpect(
@@ -228,7 +228,7 @@ class OwnerControllerTest {
                 content()
                     .string(
                         containsString(
-                            "<input class=\"fom\" type=\"text\" name=\"lastName\" placeholder=\"Find Owners\" data-bind:last-name=\"\" data-on:input__debounce.200ms=\"@get('/owners/find/result')\">",
+                            "<input class=\"fom\" type=\"text\" name=\"lastName\" placeholder=\"Find Owners\" data-bind=\"lastName\" data-on:input__debounce.200ms=\"@get('/owners/find/result')\">",
                         ),
                     ),
             ).andExpect(content().string(containsString("<table id=\"owners\" class=\"table table-striped\">")))
@@ -325,7 +325,7 @@ class OwnerControllerTest {
                 content()
                     .string(
                         containsString(
-                            $$"<button id=\"pet-edit\" class=\"btn btn-primary\" data-on:click=\"$_editing = true; @get('/owners/$${george.id}/pets/$${george.pets.first().id}/edit')\" data-indicator:_fetching=\"\" data-attr:disabled=\"$_fetching || $_editing\">",
+                            $$"""<button id="pet-edit" class="btn btn-primary" data-on:click="$_editing = true; @get('/owners/$${george.id}/pets/$${george.pets.first().id}/edit')" data-indicator="_fetching" data-attr:disabled="$_fetching || $_editing">""",
                         ),
                     ),
             ).andExpect(

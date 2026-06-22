@@ -6,8 +6,8 @@ import org.xmlet.htmlapifaster.label
 import org.xmlet.htmlapifaster.option
 import org.xmlet.htmlapifaster.select
 import org.xmlet.htmlapifaster.span
-import org.xmlet.htmlflow.datastar.Signal
 import org.xmlet.htmlflow.datastar.attributes.dataBind
+import org.xmlet.htmlflow.datastar.expressions.Signal
 
 fun Div<*>.partialSelectField(
     id: String,

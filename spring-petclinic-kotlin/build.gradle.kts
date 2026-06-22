@@ -71,7 +71,7 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     // HtmlFlow Datastar dependency
-    implementation("com.github.xmlet:htmlflow-datastar-core:1.1.0-alpha.1")
+    implementation("com.github.xmlet:htmlflow-datastar:1.3.0-alpha")
 
     // kotlinx.serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")

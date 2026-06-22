@@ -33,8 +33,8 @@ class OwnersCreate {
             attrId("add-owner-form")
             attrMethod(EnumMethodType.POST)
             div {
-                val firstName = dataSignal("first-name")
-                val lastName = dataSignal("last-name")
+                val firstName = dataSignal("firstName")
+                val lastName = dataSignal("lastName")
                 val address = dataSignal("address")
                 val city = dataSignal("city")
                 val telephone = dataSignal("telephone")

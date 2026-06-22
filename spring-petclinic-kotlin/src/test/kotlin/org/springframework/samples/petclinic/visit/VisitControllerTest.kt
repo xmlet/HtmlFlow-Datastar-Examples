@@ -120,21 +120,21 @@ class VisitControllerTest {
                 content()
                     .string(
                         containsString(
-                            "<form class=\"form-horizontal\" data-signals:date=\"\" data-signals:description=\"\" method=\"post\" action=\"/owners/$TEST_OWNER_ID/pets/$TEST_PET_ID/visits/new\">",
+                            """<form class="form-horizontal" data-signals="{date: ""}" data-signals="{description: ""}" method="post" action="/owners/$TEST_OWNER_ID/pets/$TEST_PET_ID/visits/new">""",
                         ),
                     ),
             ).andExpect(
                 content()
                     .string(
                         containsString(
-                            "<input class=\"form-control\" type=\"date\" id=\"date\" name=\"date\" data-bind:date=\"\" value=\"${LocalDate.now()}\">",
+                            "<input class=\"form-control\" type=\"date\" id=\"date\" name=\"date\" data-bind=\"date\" value=\"${LocalDate.now()}\">",
                         ),
                     ),
             ).andExpect(
                 content()
                     .string(
                         containsString(
-                            "<input class=\"form-control\" type=\"text\" id=\"description\" name=\"description\" data-bind:description=\"\" value=\"\">",
+                            "<input class=\"form-control\" type=\"text\" id=\"description\" name=\"description\" data-bind=\"description\" value=\"\">",
                         ),
                     ),
             ).andExpect(content().string(containsString("Previous Visits")))
@@ -196,21 +196,21 @@ class VisitControllerTest {
                 content()
                     .string(
                         containsString(
-                            "<form class=\"form-horizontal\" data-signals:date=\"\" data-signals:description=\"\" method=\"post\" action=\"/owners/$TEST_OWNER_ID/pets/$TEST_PET_ID/visits/new\">",
+                            "<form class=\"form-horizontal\" data-signals=\"{date: \"\"}\" data-signals=\"{description: \"\"}\" method=\"post\" action=\"/owners/$TEST_OWNER_ID/pets/$TEST_PET_ID/visits/new\">",
                         ),
                     ),
             ).andExpect(
                 content()
                     .string(
                         containsString(
-                            "<input class=\"form-control\" type=\"date\" id=\"date\" name=\"date\" data-bind:date=\"\" value=\"${LocalDate.now()}\">",
+                            "<input class=\"form-control\" type=\"date\" id=\"date\" name=\"date\" data-bind=\"date\" value=\"${LocalDate.now()}\">",
                         ),
                     ),
             ).andExpect(
                 content()
                     .string(
                         containsString(
-                            "<input class=\"form-control\" type=\"text\" id=\"description\" name=\"description\" data-bind:description=\"\" value=\"\">",
+                            "<input class=\"form-control\" type=\"text\" id=\"description\" name=\"description\" data-bind=\"description\" value=\"\">",
                         ),
                     ),
             ).andExpect(content().string(containsString("Previous Visits")))
