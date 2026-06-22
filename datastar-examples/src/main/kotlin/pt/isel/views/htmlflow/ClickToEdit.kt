@@ -67,37 +67,39 @@ val hfEditModeFragment: HtmlView<Profile> =
         div {
             attrId("demo")
             dyn { profile: Profile ->
-                dataSignals(
-                    "firstName" to profile.firstName,
-                    "lastName" to profile.lastName,
-                    "email" to profile.email,
-                )
-            }
-            label {
-                text("First Name")
-                input {
-                    attrType(EnumTypeInputType.TEXT)
-                    dataBind("first-name")
-                    val fetching = dataIndicator("_fetching")
-                    dataAttr("disabled") { +fetching }
+                val (firstName, lastName, email) =
+                    dataSignals(
+                        "firstName" to profile.firstName,
+                        "lastName" to profile.lastName,
+                        "email" to profile.email,
+                    )
+
+                label {
+                    text("First Name")
+                    input {
+                        attrType(EnumTypeInputType.TEXT)
+                        dataBind(firstName)
+                        val fetching = dataIndicator("_fetching")
+                        dataAttr("disabled") { +fetching }
+                    }
                 }
-            }
-            label {
-                text("Last Name")
-                input {
-                    attrType(EnumTypeInputType.TEXT)
-                    dataBind("last-name")
-                    val fetching = dataIndicator("_fetching")
-                    dataAttr("disabled") { +fetching }
+                label {
+                    text("Last Name")
+                    input {
+                        attrType(EnumTypeInputType.TEXT)
+                        dataBind(lastName)
+                        val fetching = dataIndicator("_fetching")
+                        dataAttr("disabled") { +fetching }
+                    }
                 }
-            }
-            label {
-                text("Email")
-                input {
-                    attrType(EnumTypeInputType.EMAIL)
-                    dataBind("email")
-                    val fetching = dataIndicator("_fetching")
-                    dataAttr("disabled") { +fetching }
+                label {
+                    text("Email")
+                    input {
+                        attrType(EnumTypeInputType.EMAIL)
+                        dataBind(email)
+                        val fetching = dataIndicator("_fetching")
+                        dataAttr("disabled") { +fetching }
+                    }
                 }
             }
             div {

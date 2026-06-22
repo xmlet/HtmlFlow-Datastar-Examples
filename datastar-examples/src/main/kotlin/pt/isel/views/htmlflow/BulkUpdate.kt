@@ -100,7 +100,7 @@ val hfBulkUpdate: HtmlView<List<User>> =
                                     input {
                                         attrType(EnumTypeInputType.CHECKBOX)
                                         dataOn(Change) {
-                                            setAll("el.checked", "{include: /^selections/}")
+                                            setAll("el.checked") { include = Regex("^selections") }
                                         }
                                         dataEffect { +$$"el.checked = $selections.every(Boolean)" }
                                         dataAttr("disabled") { +fetching }

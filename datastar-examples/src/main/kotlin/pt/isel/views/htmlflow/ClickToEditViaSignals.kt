@@ -102,7 +102,7 @@ val hfClickToEditSignals =
                                     text("First Name")
                                     input {
                                         attrType(EnumTypeInputType.TEXT)
-                                        dataBind("first-name")
+                                        dataBind(firstName)
                                         val fetching = dataIndicator("_fetching")
                                         dataAttr("disabled") { +fetching }
                                     }
@@ -111,7 +111,7 @@ val hfClickToEditSignals =
                                     text("Last Name")
                                     input {
                                         attrType(EnumTypeInputType.TEXT)
-                                        dataBind("last-name")
+                                        dataBind(lastName)
                                         val fetching = dataIndicator("_fetching")
                                         dataAttr("disabled") { +fetching }
                                     }

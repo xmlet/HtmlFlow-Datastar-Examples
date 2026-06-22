@@ -53,9 +53,9 @@ class InlineValidationTest {
                 // Wait for the form to be present
                 page.waitForSelector("#demo")
 
-                val emailInput = "input[data-bind\\:email]"
-                val firstNameInput = "input[data-bind\\:first-name]"
-                val lastNameInput = "input[data-bind\\:last-name]"
+                val emailInput = "label:has-text('Email Address') input"
+                val firstNameInput = "label:has-text('First Name') input"
+                val lastNameInput = "label:has-text('Last Name') input"
                 val submitButton = "button.success"
 
                 // Fill inputs with invalid values

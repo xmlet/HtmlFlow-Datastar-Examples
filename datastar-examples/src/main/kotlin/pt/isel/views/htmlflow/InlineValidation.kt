@@ -112,7 +112,7 @@ private fun Div<*>.buildFirstNameLabel() {
             attrType(EnumTypeInputType.TEXT)
             attrRequired(true)
             addAttr("aria-live", "polite")
-            dataBind("first-name")
+            dataBind("firstName")
             dataOn(Keydown) {
                 post(::validateFields)
                 modifiers { debounce(200.milliseconds) }
@@ -128,7 +128,7 @@ private fun Div<*>.buildLastNameLabel() {
             attrType(EnumTypeInputType.TEXT)
             attrRequired(true)
             addAttr("aria-live", "polite")
-            dataBind("last-name")
+            dataBind("lastName")
             dataOn(Keydown) {
                 post(::validateFields)
                 modifiers { debounce(500.milliseconds) }

@@ -24,7 +24,6 @@ import org.xmlet.htmlapifaster.td
 import org.xmlet.htmlapifaster.th
 import org.xmlet.htmlapifaster.thead
 import org.xmlet.htmlapifaster.tr
-import org.xmlet.htmlflow.datastar.Signal
 import org.xmlet.htmlflow.datastar.attributes.dataAttr
 import org.xmlet.htmlflow.datastar.attributes.dataBind
 import org.xmlet.htmlflow.datastar.attributes.dataIndicator
@@ -32,6 +31,7 @@ import org.xmlet.htmlflow.datastar.attributes.dataInit
 import org.xmlet.htmlflow.datastar.attributes.dataOn
 import org.xmlet.htmlflow.datastar.attributes.dataSignal
 import org.xmlet.htmlflow.datastar.events.Click
+import org.xmlet.htmlflow.datastar.expressions.Signal
 import pt.isel.http4k.cancelEditRow
 import pt.isel.http4k.getEditRowDescription
 import pt.isel.http4k.resetTable
