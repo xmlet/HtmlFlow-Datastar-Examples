@@ -1,10 +1,31 @@
-FROM gradle:4.7.0-jdk8-alpine AS build
-COPY --chown=gradle:gradle . /home/gradle/src
-WORKDIR /home/gradle/src
-RUN gradle build
+# ---------- Build stage ----------
+FROM eclipse-temurin:21-jdk AS build
 
-FROM openjdk:8-jre-slim
+WORKDIR /workspace
+
+# Copy Gradle wrapper first for better layer caching
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle* settings.gradle* ./
+
+RUN chmod +x gradlew
+
+# Download Gradle dependencies
+RUN ./gradlew dependencies --no-daemon || true
+
+# Copy the rest of the project
+COPY . .
+
+# Build the application
+RUN ./gradlew clean bootJar --no-daemon
+
+# ---------- Runtime stage ----------
+FROM eclipse-temurin:21-jre
+
+WORKDIR /app
+
+COPY --from=build /workspace/build/libs/*.jar app.jar
+
 EXPOSE 8080
-COPY --from=build /home/gradle/src/build/libs/spring-petclinic-kotlin.jar /app/
-RUN bash -c 'touch /app/spring-petclinic-kotlin.jar'
-ENTRYPOINT ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app/spring-petclinic-kotlin.jar"]
+
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
