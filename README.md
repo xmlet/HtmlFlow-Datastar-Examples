@@ -136,6 +136,25 @@ Check all examples from the index page and corresponding HtmlFlow view definitio
 * Infinite Scroll - [InfiniteScroll.kt](datastar-examples/src/main/kotlin/pt/isel/views/htmlflow/InfiniteScroll.kt)
 * Inline Validation - [InlineValidation.kt](datastar-examples/src/main/kotlin/pt/isel/views/htmlflow/InlineValidation.kt)
 
+Alternatively, you can run the application with Docker:
+
+```bash
+cd htmlflow-datastar-examples
+
+# Build the Docker image
+docker build -t htmlflow-datastar-examples .
+
+# Run the application
+docker run \
+  -e SERVER_TYPE=Ktor \
+  -e PORT=4000 \
+  -p 4000:4000 \
+  htmlflow-datastar-examples
+```
+
+You may omit `PORT` and the `-p` option if you want to use the default port (`8080`).
+
+
 # Spring Petclinic with HtmlFlow and DataStar
 
 The `petclinic-htmlflow` module contains an implementation of the Spring Petclinic application using HtmlFlow Kotlin views and DataStar hypermedia controls; it replaces the previous Thymeleaf templates. The goal is to preserve the original Petclinic domain and features while exploring a backend-driven, hypermedia-first UI model that is:

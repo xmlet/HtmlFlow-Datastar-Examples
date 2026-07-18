@@ -17,13 +17,15 @@ RUN ./gradlew dependencies --no-daemon || true
 COPY . .
 
 # Build the application
-RUN ./gradlew clean bootJar --no-daemon
+RUN ./gradlew clean installDist --no-daemon
 
 # ---------- Runtime stage ----------
 FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
-COPY --from=build /workspace/build/libs/*.jar app.jar
+COPY --from=build /workspace/build/install/workspace/lib/ ./
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENV SERVER_TYPE=Ktor
+
+ENTRYPOINT ["java", "-cp", "/app/*", "pt.isel.AppKt"]
