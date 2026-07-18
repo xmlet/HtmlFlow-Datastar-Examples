@@ -1,16 +1,10 @@
 # HtmlFlow-Datastar-Examples
-
-This repository contains two projects. The first gathers the [Datastar examples](https://data-star.dev/examples), providing a practical showcase of how the
-DSL can be used in real backend-driven web applications. The second implements an equivalent version of the classic [Spring
-Petclinic](https://github.com/spring-petclinic/spring-petclinic-kotlin) by replacing the Thymeleaf template engine with the [Type-Safe Hypermedia-First DSL for Reactive
-Backend-Driven Web Applications](https://github.com/xmlet/HtmlFlow-Datastar).
-
-## Datastar Examples
-
 🚀 **DataStar version: 1.0.1** 
 
 This project includes a demo web application featuring examples from
-[Data-Star](https://data-star.dev/examples), running on **Ktor** and **http4k** and using the **HtmlFlow Kotlin DSL** to generate HTML.
+[Data-Star](https://data-star.dev/examples), running on **Ktor** and **http4k** and using the
+[Type-Safe Hypermedia-First DSL for Reactive Backend-Driven Web
+Applications](https://github.com/xmlet/HtmlFlow-Datastar) to generate HTML.
 
 HtmlFlow DSL provides type-safe backend handlers for DataStar actions.
 In the following samples, note how the action `get` is attached to a handler given by a function reference, this function being annotated
@@ -103,7 +97,7 @@ button {
 ```html
 <button
   data-indicator:_fetching
-  data-attr:aria-disabled="$_fetching"
+  data-attr:disabled="$_fetching"
   data-on:click="!$_fetching && @get('/examples/click_to_load/more')"
 >
     Load More
@@ -139,7 +133,7 @@ Check all examples from the index page and corresponding HtmlFlow view definitio
 Alternatively, you can run the application with Docker:
 
 ```bash
-cd htmlflow-datastar-examples
+cd datastar-examples
 
 # Build the Docker image
 docker build -t htmlflow-datastar-examples .
@@ -153,75 +147,3 @@ docker run \
 ```
 
 You may omit `PORT` and the `-p` option if you want to use the default port (`8080`).
-
-
-# Spring Petclinic with HtmlFlow and DataStar
-
-The `petclinic-htmlflow` module contains an implementation of the Spring Petclinic application using HtmlFlow Kotlin views and DataStar hypermedia controls; it replaces the previous Thymeleaf templates. The goal is to preserve the original Petclinic domain and features while exploring a backend-driven, hypermedia-first UI model that is:
-
-- Type-safe: views are expressed in Kotlin using the HtmlFlow DSL.
-- Server-driven: DataStar actions and signals enable server-initiated UI updates.
-- Incremental and efficient: updates can patch page fragments (for example table rows) instead of reloading whole pages.
-
-
-Run the Petclinic application with Gradle:
-
-```bash
-cd ./petclinic-htmlflow
-./gradlew bootRun
-```
-
-Open http://localhost:8080 in your browser. The application supports the usual Petclinic features (owners, pets, visits) implemented with HtmlFlow/DataStar rather than Thymeleaf.
-
-Thymeleaf vs HtmlFlow + DataStar
------------------------------------------
-
-Below is a simplified comparison showing the traditional Thymeleaf `findOwners` form and an equivalent HtmlFlow view that uses data binding and a Debounce modifier to drive the search results from the server.
-
-Thymeleaf (classic form)
-
-```html
-<h2>Find Owners</h2>
-<form th:object="${owner}" th:action="@{/owners}" method="get">
-  <div id="lastNameGroup">
-    <label>Last name</label>
-    <div>
-      <input th:field="*{lastName}" size="30" maxlength="80"/>
-      <span class="help-inline">
-        <div th:if="${#fields.hasAnyErrors()}">
-          <p th:each="err : ${#fields.allErrors()}" th:text="${err}">Error</p>
-        </div>
-      </span>
-    </div>
-  </div>
-  <button type="submit">Find Owner</button>
-  <a th:href="@{/owners/new}">Add Owner</a>
-</form>
-```
-
-HtmlFlow + DataStar (server-driven)
-
-```kotlin
-h2 { text("Find Owners") }
-val lastName = dataSignal("lastName")
-dataText { +" Searching for users with last name $lastName " }
-input {
-  dataBind(lastName)
-  dataOn(Input) {
-    get(::searchhOwners)
-    modifiers { debounce(200.milliseconds) }
-  }
-}
-table {
-  tableHead()
-  tbody { tableBody() }
-}
-a { attrHref("/owners/new"); text("Add Owner") }
-```
-
-Why use this approach?
-----------------------
-
-- Server-driven UIs keep view code on the backend, reducing the need for a separate frontend codebase while still delivering interactive behavior.
-- Fine-grained patches (signals/events) reduce network traffic compared with full page reloads.
-- Kotlin + HtmlFlow provide compile-time guarantees for view changes and make refactors safer.
