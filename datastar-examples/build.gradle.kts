@@ -30,7 +30,7 @@ dependencies {
     implementation("org.http4k:http4k-web-datastar")
 
     // HtmlFlow-Datastar dependency
-    implementation("com.github.xmlet:htmlflow-datastar:1.3.0-alpha")
+    implementation("com.github.xmlet:htmlflow-datastar:1.0.0")
 
     // Datastar Kotlin SDK non-blocking dependencies
     implementation("dev.data-star.kotlin:kotlin-sdk-coroutines:1.0.0-RC5")
