@@ -1,5 +1,5 @@
 # HtmlFlow-Datastar-Examples
-🚀 **DataStar version: 1.0.1** 
+🚀 **DataStar version: 1.0.2** 
 
 This project includes a demo web application featuring examples from
 [Data-Star](https://data-star.dev/examples), running on **Ktor** and **http4k** and using the
