@@ -130,6 +130,12 @@ Check all examples from the index page and corresponding HtmlFlow view definitio
 * Infinite Scroll - [InfiniteScroll.kt](datastar-examples/src/main/kotlin/pt/isel/views/htmlflow/InfiniteScroll.kt)
 * Inline Validation - [InlineValidation.kt](datastar-examples/src/main/kotlin/pt/isel/views/htmlflow/InlineValidation.kt)
 
+## Online Examples
+
+The examples built with Ktor are available online at: **https://examples.htmlflow.org/**
+
+## Running Locally
+
 Alternatively, you can run the application with Docker:
 
 ```bash
