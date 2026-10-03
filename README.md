@@ -7,7 +7,7 @@ Backend-Driven Web Applications](https://github.com/xmlet/HtmlFlow-Datastar).
 
 ## Datastar Examples
 
-🚀 **DataStar version: 1.0.1** 
+🚀 **DataStar version: 1.0.4** 
 
 This project includes a demo web application featuring examples from
 [Data-Star](https://data-star.dev/examples), running on **Ktor** and **http4k** and using the **HtmlFlow Kotlin DSL** to generate HTML.
