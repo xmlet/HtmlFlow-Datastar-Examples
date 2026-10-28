@@ -1,5 +1,5 @@
 # HtmlFlow-Datastar-Examples
-🚀 **DataStar version: 1.0.2** 
+🚀 **DataStar version: 1.0.4** 
 
 This project includes a demo web application featuring examples from
 [Data-Star](https://data-star.dev/examples), running on **Ktor** and **http4k** and using the
@@ -97,7 +97,7 @@ button {
 ```html
 <button
   data-indicator:_fetching
-  data-attr:disabled="$_fetching"
+  data-attr:aria-disabled="$_fetching"
   data-on:click="!$_fetching && @get('/examples/click_to_load/more')"
 >
     Load More
@@ -130,26 +130,73 @@ Check all examples from the index page and corresponding HtmlFlow view definitio
 * Infinite Scroll - [InfiniteScroll.kt](datastar-examples/src/main/kotlin/pt/isel/views/htmlflow/InfiniteScroll.kt)
 * Inline Validation - [InlineValidation.kt](datastar-examples/src/main/kotlin/pt/isel/views/htmlflow/InlineValidation.kt)
 
-## Online Examples
+# Spring Petclinic with HtmlFlow and DataStar
 
-The examples built with Ktor are available online at: **https://examples.htmlflow.org/**
+The `petclinic-htmlflow` module contains an implementation of the Spring Petclinic application using HtmlFlow Kotlin views and DataStar hypermedia controls; it replaces the previous Thymeleaf templates. The goal is to preserve the original Petclinic domain and features while exploring a backend-driven, hypermedia-first UI model that is:
 
-## Running Locally
+- Type-safe: views are expressed in Kotlin using the HtmlFlow DSL.
+- Server-driven: DataStar actions and signals enable server-initiated UI updates.
+- Incremental and efficient: updates can patch page fragments (for example table rows) instead of reloading whole pages.
 
-Alternatively, you can run the application with Docker:
+
+Run the Petclinic application with Gradle:
 
 ```bash
-cd datastar-examples
-
-# Build the Docker image
-docker build -t htmlflow-datastar-examples .
-
-# Run the application
-docker run \
-  -e SERVER_TYPE=Ktor \
-  -e PORT=4000 \
-  -p 4000:4000 \
-  htmlflow-datastar-examples
+cd ./petclinic-htmlflow
+./gradlew bootRun
 ```
 
-You may omit `PORT` and the `-p` option if you want to use the default port (`8080`).
+Open http://localhost:8080 in your browser. The application supports the usual Petclinic features (owners, pets, visits) implemented with HtmlFlow/DataStar rather than Thymeleaf.
+
+Thymeleaf vs HtmlFlow + DataStar
+-----------------------------------------
+
+Below is a simplified comparison showing the traditional Thymeleaf `findOwners` form and an equivalent HtmlFlow view that uses data binding and a Debounce modifier to drive the search results from the server.
+
+Thymeleaf (classic form)
+
+```html
+<h2>Find Owners</h2>
+<form th:object="${owner}" th:action="@{/owners}" method="get">
+  <div id="lastNameGroup">
+    <label>Last name</label>
+    <div>
+      <input th:field="*{lastName}" size="30" maxlength="80"/>
+      <span class="help-inline">
+        <div th:if="${#fields.hasAnyErrors()}">
+          <p th:each="err : ${#fields.allErrors()}" th:text="${err}">Error</p>
+        </div>
+      </span>
+    </div>
+  </div>
+  <button type="submit">Find Owner</button>
+  <a th:href="@{/owners/new}">Add Owner</a>
+</form>
+```
+
+HtmlFlow + DataStar (server-driven)
+
+```kotlin
+h2 { text("Find Owners") }
+val lastName = dataSignal("lastName")
+dataText { +" Searching for users with last name $lastName " }
+input {
+  dataBind(lastName)
+  dataOn(Input) {
+    get(::searchhOwners)
+    modifiers { debounce(200.milliseconds) }
+  }
+}
+table {
+  tableHead()
+  tbody { tableBody() }
+}
+a { attrHref("/owners/new"); text("Add Owner") }
+```
+
+Why use this approach?
+----------------------
+
+- Server-driven UIs keep view code on the backend, reducing the need for a separate frontend codebase while still delivering interactive behavior.
+- Fine-grained patches (signals/events) reduce network traffic compared with full page reloads.
+- Kotlin + HtmlFlow provide compile-time guarantees for view changes and make refactors safer.
