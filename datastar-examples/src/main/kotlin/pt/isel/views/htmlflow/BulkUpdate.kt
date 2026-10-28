@@ -33,6 +33,7 @@ import org.xmlet.htmlflow.datastar.attributes.dataOn
 import org.xmlet.htmlflow.datastar.attributes.dataSignals
 import org.xmlet.htmlflow.datastar.events.Change
 import org.xmlet.htmlflow.datastar.events.Click
+import org.xmlet.htmlflow.datastar.serialization.asRawJS
 import pt.isel.http4k.activateUsers
 import pt.isel.http4k.deactivateUsers
 import pt.isel.http4k.getBulkUpdateDescription
@@ -91,7 +92,7 @@ val hfBulkUpdate: HtmlView<List<User>> =
                     val (fetching, selections) =
                         dataSignals(
                             "_fetching" to false,
-                            "selections" to { "Array(4).fill(false)" },
+                            "selections" to "Array(4).fill(false)".asRawJS(),
                         ) { modifiers { ifMissing() } }
                     table {
                         thead {

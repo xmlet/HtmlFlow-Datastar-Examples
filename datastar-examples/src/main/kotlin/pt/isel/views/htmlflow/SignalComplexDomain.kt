@@ -22,6 +22,11 @@ import org.xmlet.htmlflow.datastar.events.Click
 import pt.isel.ktor.switchUser
 import pt.isel.ktor.updateUserAge
 
+data class Person(
+    val name: String,
+    val age: Int,
+)
+
 val signalComplexDomain =
     StringBuilder()
         .apply {
@@ -40,9 +45,9 @@ val signalComplexDomain =
                     body {
                         div {
                             attrId("person-info")
-                            val person = dataSignals("person" to "{name: 'John Doe', age: 18}")
-                            p { dataText { +"$person.name" } }
-                            p { dataText { +"$person.age" } }
+                            val (person) = dataSignals("person" to Person("John Doe", 18))
+                            p { dataText { +person.on(Person::name) } }
+                            p { dataText { +person.on(Person::age) } }
                             div {
                                 input {
                                     attrType(EnumTypeInputType.TEXT)
