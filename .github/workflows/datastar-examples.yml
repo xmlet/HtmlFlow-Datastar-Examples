@@ -23,7 +23,7 @@ jobs:
       run:
         working-directory: datastar-examples
     env:
-      PLAYWRIGHT_VERSION: 1.48.0
+      PLAYWRIGHT_VERSION: 1.65.0
     steps:
       - uses: actions/checkout@v4
         with:

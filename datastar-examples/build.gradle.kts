@@ -52,7 +52,7 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host:3.4.0")
 
     // Playwright for end-to-end testing with JavaScript execution
-    testImplementation("com.microsoft.playwright:playwright:1.48.0")
+    testImplementation("com.microsoft.playwright:playwright:1.65.0")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

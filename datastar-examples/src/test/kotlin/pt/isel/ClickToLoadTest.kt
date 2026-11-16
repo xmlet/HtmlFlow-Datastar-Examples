@@ -76,17 +76,17 @@ class ClickToLoadTest {
                     assertEquals(3, cells.size, "Each row should have 3 cells")
 
                     // Verify the name column
-                    val name = cells[0].textContent().trim()
+                    val name = cells[0].textContent()?.trim()
                     assertEquals("Agent Smith $i", name, "Row $i should have correct name")
 
                     // Verify the email column
-                    val email = cells[1].textContent().trim()
+                    val email = cells[1].textContent()?.trim()
                     assertEquals("void$i@null.org", email, "Row $i should have correct email")
 
                     // Verify the ID column exists and is non-empty
-                    val id = cells[2].textContent().trim()
-                    assertEquals(id.isNotEmpty(), true, "Row $i should have a non-empty ID")
-                    assertEquals(id.length, 16, "ID should be 16 characters (8 hex bytes)")
+                    val id = cells[2].textContent()?.trim()
+                    assertEquals(true, id?.isNotEmpty(), "Row $i should have a non-empty ID")
+                    assertEquals(16, id?.length, "ID should be 16 characters (8 hex bytes)")
                 }
 
                 // Verify the HTML structure matches the expected format

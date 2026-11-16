@@ -56,7 +56,7 @@ class ActiveSearchTest {
 
                 // Type "Ann" into the search input
                 val searchInput = page.querySelector("input")
-                searchInput.fill("Ann")
+                searchInput?.fill("Ann")
 
                 // Wait for the table to update
                 page.waitForFunction("document.querySelectorAll('tbody tr').length === 1")
@@ -67,13 +67,13 @@ class ActiveSearchTest {
                 // Verify the content of the filtered row
                 val row = page.querySelectorAll("tbody tr").first()
 
-                val firstName = row.querySelectorAll("td")[0].textContent().trim()
-                val lastName = row.querySelectorAll("td")[1].textContent().trim()
+                val firstName = row.querySelectorAll("td")[0].textContent()?.trim()
+                val lastName = row.querySelectorAll("td")[1].textContent()?.trim()
                 assertEquals("Annamarie", firstName, "Filtered row should have first name 'Annamarie'")
                 assertEquals("Rippin", lastName, "Filtered row should have last name 'Rippin'")
 
                 // Clear the search input
-                searchInput.fill("")
+                searchInput?.fill("")
                 page.waitForFunction("document.querySelectorAll('tbody tr').length === 10")
                 val resetRowCount = page.querySelectorAll("tbody tr").size
                 assertEquals(10, resetRowCount, "Table should have 10 rows after clearing search")

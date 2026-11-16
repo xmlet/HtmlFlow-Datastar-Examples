@@ -60,9 +60,10 @@ class LazyLoadTest {
                 assertNotNull(graphDiv, "Graph div should exist")
 
                 val initialText = graphDiv.textContent()
-                assertTrue(
-                    initialText.contains("Loading"),
-                    "Initial content should contain 'Loading...', but was: '$initialText'",
+                assertEquals(
+                    true,
+                    initialText?.contains("Loading"),
+                    "Initial content should contain 'Loading...', but was: '$initialText'"
                 )
 
                 // Verify no image is present initially
@@ -97,8 +98,9 @@ class LazyLoadTest {
 
                 // Verify "Loading..." text is gone
                 val finalText = graphDiv.textContent()
-                assertTrue(
-                    !finalText.contains("Loading"),
+                assertEquals(
+                    false,
+                    finalText?.contains("Loading"),
                     "Loading text should be replaced after graph loads, but text was: '$finalText'",
                 )
             } finally {

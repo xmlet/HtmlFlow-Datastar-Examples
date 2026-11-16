@@ -4,7 +4,7 @@ import com.microsoft.playwright.Browser
 import com.microsoft.playwright.BrowserType
 import com.microsoft.playwright.Page
 import com.microsoft.playwright.Playwright
-import com.microsoft.playwright.options.WaitForSelectorState
+import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -58,7 +58,7 @@ class ClickToEditTest {
             val page = context.newPage()
 
             try {
-                // Navigate to the click-to-load page
+                // Navigate to the click-to-edit page
                 val url = "http://localhost:$port$path"
                 val response = page.navigate(url)
                 assertEquals(200, response?.status(), "Navigation to $url should return 200")
@@ -80,12 +80,7 @@ class ClickToEditTest {
                 page.locator("#save").click()
 
                 // Verify updated details are displayed
-                val firstName = page.textContent("p:has-text('First Name')").substringAfter(":").trim()
-                val lastName = page.textContent("p:has-text('Last Name')").substringAfter(":").trim()
-                val email = page.textContent("p:has-text('Email')").substringAfter(":").trim()
-                assertEquals("Alice", firstName, "First name should be updated to Alice")
-                assertEquals("Smith", lastName, "Last name should be updated to Smith")
-                assertEquals("alice.smith@org.com", email, "Email should be updated to alice.smith@org.com")
+                assertProfile(page, "Alice", "Smith", "alice.smith@org.com")
 
                 // Click the Edit button again
                 page.locator("#edit").click()
@@ -98,47 +93,33 @@ class ClickToEditTest {
                 // Click the Cancel button
                 page.locator("#cancel").click()
 
-                page.waitForSelector("#edit-form", Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN))
-                page.waitForSelector("p:has-text('First Name')")
-                page.waitForTimeout(300.0)
-
                 // Verify original details are retained
-                val firstNameAfterCancel = page.textContent("p:has-text('First Name')").substringAfter(":").trim()
-                val lastNameAfterCancel = page.textContent("p:has-text('Last Name')").substringAfter(":").trim()
-                val emailAfterCancel = page.textContent("p:has-text('Email')").substringAfter(":").trim()
-                assertEquals("Alice", firstNameAfterCancel, "First name should remain Alice after cancel")
-                assertEquals("Smith", lastNameAfterCancel, "Last name should remain Smith after cancel")
-                assertEquals("alice.smith@org.com", emailAfterCancel, "Email should remain alice.smith@org.com after cancel")
+                assertThat(page.locator("#edit")).isVisible()
+                assertProfile(page, "Alice", "Smith", "alice.smith@org.com")
 
                 // Click the Reset button and wait for the default details to be displayed
                 page.locator("#reset").click()
-                page.waitForSelector("p:has-text('First Name')")
-                page.waitForSelector("p:has-text('Last Name')")
-                page.waitForSelector("p:has-text('Email')")
-				
                 // Verify default user details are restored
-                val defaultFirstName = page.textContent("p:has-text('First Name')").substringAfter(":").trim()
-                val defaultLastName = page.textContent("p:has-text('Last Name')").substringAfter(":").trim()
-                val defaultEmail = page.textContent("p:has-text('Email')").substringAfter(":").trim()
-                assertEquals("John", defaultFirstName, "First name should be reset to default John")
-                assertEquals("Doe", defaultLastName, "Last name should be reset to default Doe")
-                assertEquals("joe@blow.com", defaultEmail, "Email should be reset to default joe@blow.com")
+                assertProfile(page, "John", "Doe", "joe@blow.com")
 
                 // Verify that the reset operation completed successfully
                 page.locator("#edit").click()
                 page.waitForSelector("label:has-text('First Name')")
 
-                val firstNameAfterReset = page.getByLabel("First Name").inputValue()
-                val lastNameAfterReset = page.getByLabel("Last Name").inputValue()
-                val emailAfterReset = page.getByLabel("Email").inputValue()
-                assertEquals("John", firstNameAfterReset, "First name input should show default John after reset")
-                assertEquals("Doe", lastNameAfterReset, "Last name input should show default Doe after reset")
-                assertEquals("joe@blow.com", emailAfterReset, "Email input should show default joe@blow.com after reset")
+                assertThat(page.getByLabel("First Name")).hasValue("John")
+                assertThat(page.getByLabel("Last Name")).hasValue("Doe")
+                assertThat(page.getByLabel("Email")).hasValue("joe@blow.com")
             } finally {
                 page.close()
                 context.close()
                 browser.close()
             }
         }
+    }
+
+    private fun assertProfile(page: Page, firstName: String, lastName: String, email: String) {
+        assertThat(page.locator("p:has-text('First Name')")).hasText("First Name: $firstName")
+        assertThat(page.locator("p:has-text('Last Name')")).hasText("Last Name: $lastName")
+        assertThat(page.locator("p:has-text('Email')")).hasText("Email: $email")
     }
 }

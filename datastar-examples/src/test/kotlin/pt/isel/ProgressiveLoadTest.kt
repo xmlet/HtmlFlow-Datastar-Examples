@@ -76,28 +76,28 @@ class ProgressiveLoadTest {
                 // Verify that the now the header, article and comments sections contains content
                 page.waitForSelector("#header")
                 assertEquals(
-                    page.textContent("#header")?.trim()?.isNotEmpty(),
                     true,
+                    page.textContent("#header")?.trim()?.isNotEmpty(),
                     "Header should not be empty after loading",
                 )
                 page.waitForSelector("#article h4")
                 assertEquals(
-                    page.textContent("#article h4")?.trim()?.isNotEmpty(),
                     true,
+                    page.textContent("#article h4")?.trim()?.isNotEmpty(),
                     "Article should not be empty after loading",
                 )
 
                 page.waitForSelector("#comments h5")
                 assertEquals(
-                    page.textContent("#comments h5")?.trim()?.isNotEmpty(),
                     true,
+                    page.textContent("#comments h5")?.trim()?.isNotEmpty(),
                     "Comments should not be empty after loading",
                 )
 
                 page.waitForSelector("#footer")
                 assertEquals(
-                    page.textContent("#footer")?.trim()?.isNotEmpty(),
                     true,
+                    page.textContent("#footer")?.trim()?.isNotEmpty(),
                     "Footer should not be empty after loading",
                 )
             } finally {
