@@ -117,7 +117,12 @@ class ClickToEditTest {
         }
     }
 
-    private fun assertProfile(page: Page, firstName: String, lastName: String, email: String) {
+    private fun assertProfile(
+        page: Page,
+        firstName: String,
+        lastName: String,
+        email: String,
+    ) {
         assertThat(page.locator("p:has-text('First Name')")).hasText("First Name: $firstName")
         assertThat(page.locator("p:has-text('Last Name')")).hasText("Last Name: $lastName")
         assertThat(page.locator("p:has-text('Email')")).hasText("Email: $email")

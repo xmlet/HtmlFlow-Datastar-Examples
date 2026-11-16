@@ -63,7 +63,7 @@ class LazyLoadTest {
                 assertEquals(
                     true,
                     initialText?.contains("Loading"),
-                    "Initial content should contain 'Loading...', but was: '$initialText'"
+                    "Initial content should contain 'Loading...', but was: '$initialText'",
                 )
 
                 // Verify no image is present initially

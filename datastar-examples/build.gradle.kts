@@ -73,23 +73,36 @@ tasks.named<Test>("test") {
 }
 
 tasks.processResources {
-    val datastarScript = providers.fileContents(
-        layout.projectDirectory.file("src/main/resources/public/js/datastar.js"),
-    ).asText.orElse("")
-    val modules = configurations.runtimeClasspath.get().incoming.artifacts.resolvedArtifacts.map { artifacts ->
-        artifacts.map { it.id.componentIdentifier }.filterIsInstance<ModuleComponentIdentifier>()
-            .filter { it.group == "com.github.xmlet" }.associate { it.module to it.version }
-    }
-    val versions = modules.zip(datastarScript) { dependencies, script ->
-        val datastar = script.lineSequence().firstOrNull()
-            ?.takeIf { it.startsWith("// Datastar v") }
-            ?.removePrefix("// Datastar v")?.trim()?.takeIf { it.isNotEmpty() }
-        mapOf(
-            "datastarVersion" to (datastar ?: "Unknown"),
-            "htmlflowVersion" to dependencies.getOrDefault("htmlflow", "Unknown"),
-            "htmlflowDatastarVersion" to dependencies.getOrDefault("htmlflow-datastar", "Unknown"),
-        )
-    }
+    val datastarScript =
+        providers
+            .fileContents(
+                layout.projectDirectory.file("src/main/resources/public/js/datastar.js"),
+            ).asText
+            .orElse("")
+    val modules =
+        configurations.runtimeClasspath.get().incoming.artifacts.resolvedArtifacts.map { artifacts ->
+            artifacts
+                .map { it.id.componentIdentifier }
+                .filterIsInstance<ModuleComponentIdentifier>()
+                .filter { it.group == "com.github.xmlet" }
+                .associate { it.module to it.version }
+        }
+    val versions =
+        modules.zip(datastarScript) { dependencies, script ->
+            val datastar =
+                script
+                    .lineSequence()
+                    .firstOrNull()
+                    ?.takeIf { it.startsWith("// Datastar v") }
+                    ?.removePrefix("// Datastar v")
+                    ?.trim()
+                    ?.takeIf { it.isNotEmpty() }
+            mapOf(
+                "datastarVersion" to (datastar ?: "Unknown"),
+                "htmlflowVersion" to dependencies.getOrDefault("htmlflow", "Unknown"),
+                "htmlflowDatastarVersion" to dependencies.getOrDefault("htmlflow-datastar", "Unknown"),
+            )
+        }
     inputs.property("libraryVersions", versions)
     filesMatching("public/index.html") {
         expand(versions.get())
