@@ -16,6 +16,7 @@ val hfFileUploadDescription =
                     attrClass("demo-description")
 
                     h2 { text("File Upload - Description") }
+                    sourceLinks("file-upload", "FileUpload")
 
                     p { text("This page performs the following fetch requests:") }
 

@@ -17,6 +17,7 @@ val hfLazyTabsDescription =
                     attrClass("demo-description")
 
                     h2 { text("Lazy Tabs - Description") }
+                    sourceLinks("lazy-tabs", "LazyTabs")
 
                     p { text("This page performs the following fetch requests:") }
 

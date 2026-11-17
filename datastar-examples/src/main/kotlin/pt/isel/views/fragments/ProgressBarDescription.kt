@@ -18,6 +18,7 @@ val hfProgressBarDescription =
                     attrClass("demo-description")
 
                     h2 { text("Progress Bar - Description") }
+                    sourceLinks("progress-bar", "ProgressBar")
 
                     p { text("This page performs the following fetch requests:") }
 

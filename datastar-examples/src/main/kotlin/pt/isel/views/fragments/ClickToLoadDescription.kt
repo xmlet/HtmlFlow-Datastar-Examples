@@ -18,6 +18,7 @@ val hfClickToLoadDescription =
                     attrClass("demo-description")
 
                     h2 { text("Click To Load - Description") }
+                    sourceLinks("click-to-load", "ClickToLoad")
 
                     p { text("This page performs the following fetch requests:") }
 

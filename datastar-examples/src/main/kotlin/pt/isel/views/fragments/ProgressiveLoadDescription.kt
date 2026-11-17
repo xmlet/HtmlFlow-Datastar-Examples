@@ -18,6 +18,7 @@ val hfProgressiveLoadDescription =
                     attrClass("demo-description")
 
                     h2 { text("Progressive Load - Description") }
+                    sourceLinks("progressive-load", "ProgressiveLoad")
 
                     p { text("This page performs the following fetch requests:") }
 

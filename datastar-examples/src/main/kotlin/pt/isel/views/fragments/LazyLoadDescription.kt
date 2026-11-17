@@ -18,6 +18,7 @@ val hfLazyLoadDescription =
                     attrClass("demo-description")
 
                     h2 { text("Lazy Load - Description") }
+                    sourceLinks("lazy-load", "LazyLoad")
 
                     p { text("This page performs the following fetch requests:") }
 

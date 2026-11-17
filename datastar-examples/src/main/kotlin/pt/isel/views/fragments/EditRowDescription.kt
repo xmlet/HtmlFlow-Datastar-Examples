@@ -17,6 +17,7 @@ val hfEditRowDescription =
                     attrClass("demo-description")
 
                     h2 { text("Edit Row - Description") }
+                    sourceLinks("edit-row", "EditRow")
 
                     p { text("This page performs the following fetch requests:") }
 

@@ -18,6 +18,7 @@ val hfCounterDescription =
                     attrClass("demo-description")
 
                     h2 { text("Counter - Description") }
+                    sourceLinks("counter", "Counter", "CounterView")
 
                     p { text("This page performs the following fetch requests:") }
 

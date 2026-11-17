@@ -16,6 +16,7 @@ val hfDeleteRowDescription =
                     attrClass("demo-description")
 
                     h2 { text("Delete Row - Description") }
+                    sourceLinks("delete-row", "DeleteRow")
 
                     p { text("This page performs the following fetch requests:") }
 

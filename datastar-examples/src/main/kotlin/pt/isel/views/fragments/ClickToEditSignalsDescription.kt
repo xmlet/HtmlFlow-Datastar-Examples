@@ -18,6 +18,7 @@ val hfClickToEditSignalsDescription =
                     attrClass("demo-description")
 
                     h2 { text("Click To Edit Signals — Description") }
+                    sourceLinks("click-to-edit-signals", "ClickToEditViaSignals")
 
                     p { text("This page performs the following fetch requests:") }
 

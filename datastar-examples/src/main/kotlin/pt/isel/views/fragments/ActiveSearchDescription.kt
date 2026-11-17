@@ -17,6 +17,7 @@ val hfActiveSearchDescription =
                     attrId("description")
                     attrClass("demo-description")
                     h2 { text("Active Search — Description") }
+                    sourceLinks("active-search", "ActiveSearch")
                     p { text("This page performs the following fetch requests:") }
                     ul {
                         li {

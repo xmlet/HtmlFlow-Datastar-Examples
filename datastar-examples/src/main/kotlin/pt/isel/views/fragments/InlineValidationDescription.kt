@@ -16,6 +16,7 @@ val hfInlineValidationDescription =
                     attrClass("demo-description")
 
                     h2 { text("Inline Validation - Description") }
+                    sourceLinks("inline-validation", "InlineValidation")
 
                     p { text("This page performs the following fetch requests:") }
 

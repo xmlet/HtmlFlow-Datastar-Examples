@@ -16,6 +16,7 @@ val hfBulkUpdateDescription =
                     attrClass("demo-description")
 
                     h2 { text("Bulk Update — Description") }
+                    sourceLinks("bulk-update", "BulkUpdate")
 
                     p { text("This page performs the following fetch requests:") }
 

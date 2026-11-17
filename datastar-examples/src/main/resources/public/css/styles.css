@@ -119,6 +119,22 @@ table tbody tr:hover {
     color: #2c3e50;
 }
 
+.demo-source-links a {
+    color: #2366a8;
+    font-weight: 600;
+    text-underline-offset: 3px;
+}
+
+.demo-source-links a::before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 5px;
+    vertical-align: -2px;
+    background: url("/images/github.svg") center / contain no-repeat;
+}
+
 .demo-description ol {
     margin: 0 0 1rem;
     padding-left: 1.25rem;

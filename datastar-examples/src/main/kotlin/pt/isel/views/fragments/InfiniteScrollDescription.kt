@@ -18,6 +18,7 @@ val hfInfiniteScrollDescription =
                     attrClass("demo-description")
 
                     h2 { text("Infinite Scroll - Description") }
+                    sourceLinks("infinite-scroll", "InfiniteScroll")
 
                     p { text("This page performs the following fetch requests:") }
 

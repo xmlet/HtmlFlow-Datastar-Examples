@@ -19,6 +19,7 @@ fun hfTodoMvcDescription(accountId: UUID) =
                     attrClass("demo-description")
 
                     h2 { text("TodoMVC - Description") }
+                    sourceLinks("todo-mvc", "TodoMvc")
 
                     p { text("This page performs the following fetch requests:") }
 
