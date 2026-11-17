@@ -37,6 +37,7 @@ val hfInlineValidation =
             doc {
                 html {
                     head {
+                        exampleMetadata("Inline Validation")
                         script {
                             attrType(EnumTypeScriptType.MODULE)
                             attrSrc("/js/datastar.js")

@@ -33,6 +33,7 @@ val signalComplexDomain =
             doc {
                 html {
                     head {
+                        exampleMetadata("Signal Complex Domain")
                         script {
                             attrType(EnumTypeScriptType.MODULE)
                             attrSrc("/js/datastar.js")

@@ -40,6 +40,7 @@ val hfFileUpload: String =
             doc {
                 html {
                     head {
+                        exampleMetadata("File Upload")
                         script {
                             attrType(EnumTypeScriptType.MODULE)
                             attrSrc("/js/datastar.js")

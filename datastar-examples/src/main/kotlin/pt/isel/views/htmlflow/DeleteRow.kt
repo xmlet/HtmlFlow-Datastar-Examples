@@ -35,6 +35,7 @@ val hfDeleteRow: HtmlView<DeleteRowsState> =
     view {
         html {
             head {
+                exampleMetadata("Delete Row")
                 script {
                     attrType(EnumTypeScriptType.MODULE)
                     attrSrc("/js/datastar.js")

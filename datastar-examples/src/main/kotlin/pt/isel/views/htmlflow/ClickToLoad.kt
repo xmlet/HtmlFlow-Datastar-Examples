@@ -36,6 +36,7 @@ val hfClickToLoad: String =
             doc {
                 html {
                     head {
+                        exampleMetadata("Click to Load")
                         script {
                             attrType(EnumTypeScriptType.MODULE)
                             attrSrc("/js/datastar.js")

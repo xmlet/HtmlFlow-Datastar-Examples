@@ -33,6 +33,7 @@ val hfProgressiveLoad =
             doc {
                 html {
                     head {
+                        exampleMetadata("Progressive Load")
                         script {
                             attrType(EnumTypeScriptType.MODULE)
                             attrSrc("/js/datastar.js")

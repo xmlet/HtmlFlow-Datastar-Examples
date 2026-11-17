@@ -30,6 +30,7 @@ val hfCounter: String =
             doc {
                 html {
                     head {
+                        exampleMetadata("Counter")
                         script {
                             attrType(EnumTypeScriptType.MODULE)
                             attrSrc("/js/datastar.js")

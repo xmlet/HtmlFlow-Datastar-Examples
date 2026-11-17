@@ -35,6 +35,7 @@ val hfActiveSearch: HtmlView<List<Contact>> =
     view {
         html {
             head {
+                exampleMetadata("Active Search")
                 script {
                     attrType(EnumTypeScriptType.MODULE)
                     attrSrc("/js/datastar.js")

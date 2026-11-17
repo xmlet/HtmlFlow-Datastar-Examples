@@ -25,6 +25,7 @@ val hfLazyLoadDoc: String =
             doc {
                 html {
                     head {
+                        exampleMetadata("Lazy Load")
                         script {
                             attrType(EnumTypeScriptType.MODULE)
                             attrSrc("/js/datastar.js")

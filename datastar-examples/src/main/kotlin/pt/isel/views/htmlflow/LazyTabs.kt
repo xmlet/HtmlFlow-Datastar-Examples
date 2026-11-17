@@ -38,6 +38,7 @@ val hfLazyTabs: String =
             doc {
                 html {
                     head {
+                        exampleMetadata("Lazy Tabs")
                         script {
                             attrType(EnumTypeScriptType.MODULE)
                             attrSrc("/js/datastar.js")

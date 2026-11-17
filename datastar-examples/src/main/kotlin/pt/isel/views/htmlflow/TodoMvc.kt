@@ -46,6 +46,7 @@ val hfTodoMvcView: HtmlView<TodoUiState> =
     view<TodoUiState> {
         html {
             head {
+                exampleMetadata("Todo MVC")
                 script {
                     attrType(EnumTypeScriptType.MODULE)
                     attrSrc("/js/datastar.js")

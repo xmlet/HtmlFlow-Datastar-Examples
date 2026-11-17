@@ -44,6 +44,7 @@ val hfEditRow: HtmlView<List<TableUser>> =
     view {
         html {
             head {
+                exampleMetadata("Edit Row")
                 script {
                     attrType(EnumTypeScriptType.MODULE)
                     attrSrc("/js/datastar.js")

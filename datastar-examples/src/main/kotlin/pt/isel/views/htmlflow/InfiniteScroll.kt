@@ -27,6 +27,7 @@ val hfInfiniteScroll =
             doc {
                 html {
                     head {
+                        exampleMetadata("Infinite Scroll")
                         script {
                             attrType(EnumTypeScriptType.MODULE)
                             attrSrc("/js/datastar.js")

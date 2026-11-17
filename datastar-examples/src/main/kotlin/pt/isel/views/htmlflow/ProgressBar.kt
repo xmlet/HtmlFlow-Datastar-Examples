@@ -31,6 +31,7 @@ val hfProgressBar: String =
             doc {
                 html {
                     head {
+                        exampleMetadata("Progress Bar")
                         script {
                             attrType(EnumTypeScriptType.MODULE)
                             attrSrc("/js/datastar.js")

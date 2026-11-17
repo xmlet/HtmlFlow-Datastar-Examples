@@ -73,6 +73,7 @@ val hfBulkUpdate: HtmlView<List<User>> =
     view {
         html {
             head {
+                exampleMetadata("Bulk Update")
                 script {
                     attrType(EnumTypeScriptType.MODULE)
                     attrSrc("/js/datastar.js")

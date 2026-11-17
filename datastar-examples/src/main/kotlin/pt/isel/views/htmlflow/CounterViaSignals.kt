@@ -27,6 +27,7 @@ val hfCounterViaSignals: String =
             doc {
                 html {
                     head {
+                        exampleMetadata("Counter via Signals")
                         script {
                             attrType(EnumTypeScriptType.MODULE)
                             attrSrc("/js/datastar.js")

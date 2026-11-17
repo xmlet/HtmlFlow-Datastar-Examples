@@ -131,6 +131,7 @@ val hfClickToEdit: HtmlView<Profile> =
     view {
         html {
             head {
+                exampleMetadata("Click to Edit")
                 script {
                     attrType(EnumTypeScriptType.MODULE)
                     attrSrc("/js/datastar.js")

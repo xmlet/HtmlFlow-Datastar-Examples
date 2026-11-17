@@ -36,6 +36,7 @@ val hfClickToEditSignals =
             doc {
                 html {
                     head {
+                        exampleMetadata("Click to Edit via Signals")
                         script {
                             attrType(EnumTypeScriptType.MODULE)
                             attrSrc("/js/datastar.js")
